@@ -1,0 +1,268 @@
+import { Material } from '@/lib/index';
+
+export const mockMaterials: Material[] = [
+  // تطبيقات الويب في أنظمة المعلومات الوثائقية
+  {
+    id: '1',
+    title: 'محاضرة 1 - مقدمة في تطبيقات الويب',
+    moduleId: 'web-apps',
+    uploadDate: '2026-04-10',
+    fileType: 'pdf',
+    fileSize: '2.3 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '2',
+    title: 'محاضرة 2 - أنظمة إدارة المحتوى',
+    moduleId: 'web-apps',
+    uploadDate: '2026-04-08',
+    fileType: 'pdf',
+    fileSize: '3.1 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '3',
+    title: 'تمارين تطبيقية - الوحدة الأولى',
+    moduleId: 'web-apps',
+    uploadDate: '2026-04-05',
+    fileType: 'docx',
+    fileSize: '1.5 MB',
+    downloadUrl: '#',
+  },
+  
+  // الوثيقة الرقمية
+  {
+    id: '4',
+    title: 'محاضرة 1 - مفهوم الوثيقة الرقمية',
+    moduleId: 'digital-doc',
+    uploadDate: '2026-04-09',
+    fileType: 'pdf',
+    fileSize: '2.8 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '5',
+    title: 'محاضرة 2 - معايير الوثائق الرقمية',
+    moduleId: 'digital-doc',
+    uploadDate: '2026-04-07',
+    fileType: 'pdf',
+    fileSize: '3.5 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '6',
+    title: 'عرض تقديمي - حفظ الوثائق الرقمية',
+    moduleId: 'digital-doc',
+    uploadDate: '2026-04-03',
+    fileType: 'pptx',
+    fileSize: '5.2 MB',
+    downloadUrl: '#',
+  },
+  
+  // هندسة المعلومات
+  {
+    id: '7',
+    title: 'محاضرة 1 - أساسيات هندسة المعلومات',
+    moduleId: 'info-engineering',
+    uploadDate: '2026-04-11',
+    fileType: 'pdf',
+    fileSize: '2.9 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '8',
+    title: 'محاضرة 2 - تصميم بنية المعلومات',
+    moduleId: 'info-engineering',
+    uploadDate: '2026-04-06',
+    fileType: 'pdf',
+    fileSize: '3.7 MB',
+    downloadUrl: '#',
+  },
+  
+  // المنصات الرقمية الوثائقية
+  {
+    id: '9',
+    title: 'محاضرة 1 - أنواع المنصات الرقمية',
+    moduleId: 'digital-platforms',
+    uploadDate: '2026-04-12',
+    fileType: 'pdf',
+    fileSize: '2.6 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '10',
+    title: 'دراسة حالة - منصات المكتبات الرقمية',
+    moduleId: 'digital-platforms',
+    uploadDate: '2026-04-04',
+    fileType: 'docx',
+    fileSize: '1.8 MB',
+    downloadUrl: '#',
+  },
+  
+  // منهجية البحث العلمي
+  {
+    id: '11',
+    title: 'محاضرة 1 - مناهج البحث في علم المكتبات',
+    moduleId: 'research-methodology',
+    uploadDate: '2026-04-10',
+    fileType: 'pdf',
+    fileSize: '3.2 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '12',
+    title: 'محاضرة 2 - تصميم البحث العلمي',
+    moduleId: 'research-methodology',
+    uploadDate: '2026-04-08',
+    fileType: 'pdf',
+    fileSize: '2.7 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '13',
+    title: 'نماذج استبيانات البحث',
+    moduleId: 'research-methodology',
+    uploadDate: '2026-04-02',
+    fileType: 'docx',
+    fileSize: '0.9 MB',
+    downloadUrl: '#',
+  },
+  
+  // إدارة بيانات البحث
+  {
+    id: '14',
+    title: 'محاضرة 1 - مقدمة في إدارة البيانات',
+    moduleId: 'data-management',
+    uploadDate: '2026-04-11',
+    fileType: 'pdf',
+    fileSize: '2.4 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '15',
+    title: 'محاضرة 2 - دورة حياة البيانات البحثية',
+    moduleId: 'data-management',
+    uploadDate: '2026-04-09',
+    fileType: 'pdf',
+    fileSize: '3.1 MB',
+    downloadUrl: '#',
+  },
+  
+  // الحوكمة والسمعة الإلكترونية
+  {
+    id: '16',
+    title: 'محاضرة 1 - مفهوم الحوكمة الإلكترونية',
+    moduleId: 'governance',
+    uploadDate: '2026-04-12',
+    fileType: 'pdf',
+    fileSize: '2.8 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '17',
+    title: 'محاضرة 2 - إدارة السمعة الرقمية',
+    moduleId: 'governance',
+    uploadDate: '2026-04-07',
+    fileType: 'pdf',
+    fileSize: '3.3 MB',
+    downloadUrl: '#',
+  },
+  
+  // البرمجة والذكاء الاصطناعي
+  {
+    id: '18',
+    title: 'محاضرة 1 - مقدمة في الذكاء الاصطناعي',
+    moduleId: 'programming-ai',
+    uploadDate: '2026-04-13',
+    fileType: 'pdf',
+    fileSize: '4.2 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '19',
+    title: 'محاضرة 2 - تطبيقات الذكاء الاصطناعي في المكتبات',
+    moduleId: 'programming-ai',
+    uploadDate: '2026-04-10',
+    fileType: 'pdf',
+    fileSize: '3.8 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '20',
+    title: 'أمثلة برمجية - Python للمكتبات',
+    moduleId: 'programming-ai',
+    uploadDate: '2026-04-05',
+    fileType: 'docx',
+    fileSize: '1.2 MB',
+    downloadUrl: '#',
+  },
+  
+  // المقاولاتية والمؤسسات الناشئة
+  {
+    id: '21',
+    title: 'محاضرة 1 - أساسيات المقاولاتية',
+    moduleId: 'entrepreneurship',
+    uploadDate: '2026-04-11',
+    fileType: 'pdf',
+    fileSize: '2.5 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '22',
+    title: 'عرض تقديمي - نماذج الأعمال',
+    moduleId: 'entrepreneurship',
+    uploadDate: '2026-04-06',
+    fileType: 'pptx',
+    fileSize: '6.1 MB',
+    downloadUrl: '#',
+  },
+  
+  // شبكات التواصل الاجتماعي
+  {
+    id: '23',
+    title: 'محاضرة 1 - دور وسائل التواصل في المكتبات',
+    moduleId: 'social-media',
+    uploadDate: '2026-04-12',
+    fileType: 'pdf',
+    fileSize: '2.7 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '24',
+    title: 'محاضرة 2 - استراتيجيات التسويق الرقمي',
+    moduleId: 'social-media',
+    uploadDate: '2026-04-08',
+    fileType: 'pdf',
+    fileSize: '3.4 MB',
+    downloadUrl: '#',
+  },
+  
+  // اللغة الإنجليزية
+  {
+    id: '25',
+    title: 'Unit 1 - Academic Writing',
+    moduleId: 'english',
+    uploadDate: '2026-04-10',
+    fileType: 'pdf',
+    fileSize: '1.9 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '26',
+    title: 'Unit 2 - Research Terminology',
+    moduleId: 'english',
+    uploadDate: '2026-04-07',
+    fileType: 'pdf',
+    fileSize: '2.1 MB',
+    downloadUrl: '#',
+  },
+  {
+    id: '27',
+    title: 'Exercises - Grammar Review',
+    moduleId: 'english',
+    uploadDate: '2026-04-03',
+    fileType: 'docx',
+    fileSize: '0.8 MB',
+    downloadUrl: '#',
+  },
+];
