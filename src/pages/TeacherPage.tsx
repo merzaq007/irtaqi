@@ -185,19 +185,19 @@ function UploadForm({ onUploaded }: { onUploaded: (file: DBFile) => void }) {
 
   return (
     <Card className="shadow-lg border-border/60">
-      <CardHeader>
+      <CardHeader className="p-4 sm:p-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-            <FileUp className="w-6 h-6 text-primary" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+            <FileUp className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-xl font-bold">نشر درس جديد</CardTitle>
-            <CardDescription>اختر المقياس والملف لنشره للطلاب فوراً</CardDescription>
+            <CardTitle className="text-lg sm:text-xl font-bold">نشر درس جديد</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">اختر المقياس والملف لنشره للطلاب فوراً</CardDescription>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleUpload} className="space-y-6">
+      <CardContent className="p-4 sm:p-6 pt-0">
+        <form onSubmit={handleUpload} className="space-y-4 sm:space-y-6">
           <div className="space-y-2">
             <Label className="font-semibold text-base">المقياس</Label>
             <Select value={selectedModule} onValueChange={setSelectedModule}>
@@ -402,35 +402,35 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8" dir="rtl">
+      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8" dir="rtl">
 
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
-              لوحة الأستاذ
+            <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
+              لوحة التحكم
             </h1>
-            <p className="text-muted-foreground mt-1">إدارة ونشر الدروس للطلاب</p>
+            <p className="text-muted-foreground mt-1 text-sm">إدارة ونشر الدروس للطلاب</p>
           </div>
-          <Button variant="outline" onClick={onLogout} className="gap-2 font-semibold">
+          <Button variant="outline" onClick={onLogout} className="gap-2 font-semibold w-full sm:w-auto text-foreground border-border hover:bg-accent">
             <LogOut size={16} />
             خروج
           </Button>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <Card className="text-center p-5 shadow-sm">
-            <p className="text-4xl font-extrabold text-primary">{files.length}</p>
-            <p className="text-muted-foreground text-sm mt-1 font-medium">إجمالي الملفات</p>
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+          <Card className="text-center p-3 sm:p-5 shadow-sm">
+            <p className="text-2xl sm:text-4xl font-extrabold text-primary">{files.length}</p>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1 font-medium">إجمالي الملفات</p>
           </Card>
-          <Card className="text-center p-5 shadow-sm">
-            <p className="text-4xl font-extrabold text-accent">{filesByModule.length}</p>
-            <p className="text-muted-foreground text-sm mt-1 font-medium">مقاييس نشطة</p>
+          <Card className="text-center p-3 sm:p-5 shadow-sm">
+            <p className="text-2xl sm:text-4xl font-extrabold text-accent">{filesByModule.length}</p>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1 font-medium">مقاييس نشطة</p>
           </Card>
-          <Card className="text-center p-5 shadow-sm col-span-2 sm:col-span-1">
-            <p className="text-4xl font-extrabold text-green-600">{MODULES.length}</p>
-            <p className="text-muted-foreground text-sm mt-1 font-medium">إجمالي المقاييس</p>
+          <Card className="text-center p-3 sm:p-5 shadow-sm">
+            <p className="text-2xl sm:text-4xl font-extrabold text-green-600">{MODULES.length}</p>
+            <p className="text-muted-foreground text-xs sm:text-sm mt-1 font-medium">إجمالي المقاييس</p>
           </Card>
         </div>
 

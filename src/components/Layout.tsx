@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Moon, Sun, GraduationCap } from 'lucide-react';
+import { Moon, Sun, GraduationCap, Facebook } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { ROUTE_PATHS } from '@/lib/index';
 import { Button } from '@/components/ui/button';
@@ -38,19 +38,19 @@ export function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <NavLink to={ROUTE_PATHS.HOME} className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-12 h-12 bg-card backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-border transition-transform duration-300 hover:scale-105 hover:rotate-3">
+              <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-primary/20 transition-transform duration-300 hover:scale-105 hover:rotate-3">
                 <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-10 h-10 object-contain drop-shadow-sm" />
               </div>
               <div className="flex flex-col">
                 <span className="text-2xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
-                <span className="text-xs font-semibold text-muted-foreground tracking-wide">تخصص تكنولوجيا وهندسة المعلومات</span>
+                <span className="text-xs font-semibold text-muted-foreground tracking-wide hidden sm:block">تخصص تكنولوجيا وهندسة المعلومات</span>
               </div>
             </NavLink>
 
             <div className="flex items-center gap-1">
-              <NavLink to="/teacher" title="لوحة الأستاذ">
-                <Button variant="ghost" size="icon" className="rounded-full opacity-40 hover:opacity-100 transition-opacity">
-                  <GraduationCap className="h-5 w-5" />
+              <NavLink to="/teacher" title="لوحة التحكم">
+                <Button variant="ghost" size="icon" className="rounded-full opacity-60 hover:opacity-100 transition-opacity">
+                  <GraduationCap className="h-5 w-5 text-foreground" />
                 </Button>
               </NavLink>
               <Button
@@ -60,9 +60,9 @@ export function Layout({ children }: LayoutProps) {
                 className="rounded-full"
               >
                 {theme === 'light' ? (
-                  <Moon className="h-5 w-5" />
+                  <Moon className="h-5 w-5 text-foreground" />
                 ) : (
-                  <Sun className="h-5 w-5" />
+                  <Sun className="h-5 w-5 text-foreground" />
                 )}
               </Button>
             </div>
@@ -76,7 +76,7 @@ export function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center gap-3 text-center">
             <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-12 h-12 bg-card backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-border transition-all hover:scale-110 hover:-translate-y-1">
+            <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-primary/20 transition-all hover:scale-110 hover:-translate-y-1">
                 <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-9 h-9 object-contain" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
@@ -84,9 +84,18 @@ export function Layout({ children }: LayoutProps) {
             <p className="text-sm text-muted-foreground">
               منصة ارتقِي - جميع الحقوق محفوظة © 2026
             </p>
-            <p className="text-sm font-medium text-foreground">
-              تصميم وتطوير الطالب بوضلعة عبدالرزاق
-            </p>
+            <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <span>تصميم وتطوير الطالب بوضلعة عبدالرزاق</span>
+              <a 
+                href="https://www.facebook.com/Abderrazak11.11" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                title="تابعني على فيسبوك"
+              >
+                <Facebook size={16} />
+              </a>
+            </div>
           </div>
         </div>
       </footer>

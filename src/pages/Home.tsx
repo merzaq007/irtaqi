@@ -9,17 +9,17 @@ import { Layout } from '../components/Layout';
 import { supabase } from '@/lib/supabase';
 
 const iconMap: Record<string, React.ReactNode> = {
-  Globe:     <Globe size={28} strokeWidth={1.5} />,
-  FileText:  <FileText size={28} strokeWidth={1.5} />,
-  Network:   <Network size={28} strokeWidth={1.5} />,
-  Server:    <Server size={28} strokeWidth={1.5} />,
-  BookOpen:  <BookOpen size={28} strokeWidth={1.5} />,
-  Database:  <Database size={28} strokeWidth={1.5} />,
-  Shield:    <Shield size={28} strokeWidth={1.5} />,
-  Bot:       <Bot size={28} strokeWidth={1.5} />,
-  Rocket:    <Rocket size={28} strokeWidth={1.5} />,
-  Share2:    <Share2 size={28} strokeWidth={1.5} />,
-  Languages: <Languages size={28} strokeWidth={1.5} />,
+  Globe:     <Globe size={22} strokeWidth={1.5} />,
+  FileText:  <FileText size={22} strokeWidth={1.5} />,
+  Network:   <Network size={22} strokeWidth={1.5} />,
+  Server:    <Server size={22} strokeWidth={1.5} />,
+  BookOpen:  <BookOpen size={22} strokeWidth={1.5} />,
+  Database:  <Database size={22} strokeWidth={1.5} />,
+  Shield:    <Shield size={22} strokeWidth={1.5} />,
+  Bot:       <Bot size={22} strokeWidth={1.5} />,
+  Rocket:    <Rocket size={22} strokeWidth={1.5} />,
+  Share2:    <Share2 size={22} strokeWidth={1.5} />,
+  Languages: <Languages size={22} strokeWidth={1.5} />,
 };
 
 export default function Home() {
@@ -76,31 +76,31 @@ export default function Home() {
             <h2 className="text-2xl font-bold text-foreground">المقاييس الدراسية</h2>
             <p className="text-muted-foreground mt-2 text-sm">اختر المقياس للوصول إلى الملفات والدروس</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {modulesData.map((module) => {
               const count = fileCounts[module.id] || 0;
               return (
                 <Link
                   key={module.id}
                   to={`/module/${module.id}`}
-                  className="group bg-card backdrop-blur-md rounded-2xl p-6 shadow-sm border border-border hover:shadow-2xl hover:border-primary/40 transition-all duration-500 ease-out hover:-translate-y-2 relative overflow-hidden"
+                  className="group bg-card backdrop-blur-md rounded-xl p-4 shadow-sm border border-border hover:shadow-2xl hover:border-primary/40 transition-all duration-500 ease-out hover:-translate-y-2 relative overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right" />
 
                   <div className="flex items-start justify-between">
-                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 shadow-inner group-hover:text-white ${module.color}`}>
+                    <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-3 transition-all duration-500 shadow-inner group-hover:text-white ${module.color}`}>
                       {iconMap[module.icon]}
                     </div>
-                    <div className="text-muted-foreground group-hover:text-primary transition-colors duration-500 mr-auto mt-2">
-                      <ChevronLeft size={24} strokeWidth={2.5} />
+                    <div className="text-muted-foreground group-hover:text-primary transition-colors duration-500 mr-auto mt-1">
+                      <ChevronLeft size={20} strokeWidth={2.5} />
                     </div>
                   </div>
 
-                  <h2 className="text-xl font-bold text-card-foreground mb-3 leading-snug group-hover:text-primary transition-colors duration-300">
+                  <h2 className="text-lg font-bold text-card-foreground mb-2 leading-snug group-hover:text-primary transition-colors duration-300">
                     {module.title}
                   </h2>
-                  <p className="text-muted-foreground text-sm font-semibold flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-accent" />
+                  <p className="text-muted-foreground text-xs font-semibold flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                     {count === 0 ? 'لا توجد ملفات بعد' : `${count} ملفات متاحة`}
                   </p>
                 </Link>
