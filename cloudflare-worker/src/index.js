@@ -44,6 +44,30 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    // Telegram Webhook - يستقبل رسائل البوت
+    if (url.pathname === '/webhook') {
+      const body = await request.json();
+      const message = body?.message;
+
+      if (message?.text === '/start' || message?.text?.includes('start')) {
+        await fetch(`https://api.telegram.org/bot${env.TELEGRAM_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: message.chat.id,
+            text:
+              `✅ <b>مرحباً ${message.from.first_name}!</b>\n\n` +
+              `🔔 الإشعارات تعمل بشكل صحيح!\n\n` +
+              `📚 ستصلك إشعارات فورية عند نشر أي درس جديد في المودل.\n\n` +
+              `🔗 <a href="https://irtaqi-1gy.pages.dev">افتح منصة ارتقي</a>`,
+            parse_mode: 'HTML'
+          })
+        });
+      }
+
+      return new Response('OK', { status: 200 });
+    }
+
     if (url.pathname === '/sync') {
       try {
         const result = await syncMoodleFiles(env);
