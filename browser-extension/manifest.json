@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Irtaqi Moodle Sync",
+  "version": "1.0",
+  "description": "مزامنة تلقائية بين المودل ومنصة ارتقي",
+  "permissions": [
+    "storage",
+    "notifications",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://moodle.univ-tiaret.dz/*",
+    "http://localhost:8080/*",
+    "https://irtaqi-1gy.pages.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://moodle.univ-tiaret.dz/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

@@ -204,9 +204,9 @@ function UploadForm({ onUploaded }: { onUploaded: (file: DBFile) => void }) {
               <SelectTrigger dir="rtl" className="h-11">
                 <SelectValue placeholder="اختر المقياس..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent dir="rtl" className="text-right">
                 {MODULES.map((m) => (
-                  <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
+                  <SelectItem key={m.id} value={m.id} className="text-right">{m.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -215,7 +215,7 @@ function UploadForm({ onUploaded }: { onUploaded: (file: DBFile) => void }) {
           <div className="space-y-2">
             <Label className="font-semibold text-base">الملف</Label>
             <div
-              className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
+              className="border-2 border-dashed border-border rounded-xl p-4 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
               onClick={() => fileInputRef.current?.click()}
             >
               {selectedFile ? (
@@ -228,8 +228,8 @@ function UploadForm({ onUploaded }: { onUploaded: (file: DBFile) => void }) {
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                  <Upload size={32} className="text-primary/50" />
-                  <p className="font-medium">اضغط لاختيار ملف</p>
+                  <Upload size={24} className="text-primary/50" />
+                  <p className="font-medium text-sm">اضغط لاختيار ملف</p>
                   <p className="text-xs">PDF, Word, PowerPoint, Excel</p>
                 </div>
               )}

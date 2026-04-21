@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irtaqi Moodle Sync</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    
+    .header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    .status {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    .status-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .badge {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+    
+    .settings {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .settings h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      direction: ltr;
+      text-align: left;
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .btn-primary {
+      background: white;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🚀 Irtaqi Sync</h1>
+    <p>مزامنة تلقائية مع المودل</p>
+  </div>
+  
+  <div class="status">
+    <div class="status-item">
+      <span>الحالة:</span>
+      <span class="badge" id="status">⏳ جاري التحقق...</span>
+    </div>
+    <div class="status-item">
+      <span>الملفات المزامنة:</span>
+      <span class="badge" id="fileCount">0</span>
+    </div>
+  </div>
+  
+  <div class="settings">
+    <h3>⚙️ الإعدادات</h3>
+    <input type="text" id="supabaseKey" placeholder="Supabase Anon Key">
+    <button class="btn-primary" id="saveBtn">حفظ الإعدادات</button>
+  </div>
+  
+  <button class="btn-primary" id="syncBtn">🔄 مزامنة الآن</button>
+  <button class="btn-secondary" id="openIrtaqi">📚 فتح منصة ارتقي</button>
+  
+  <div class="footer">
+    <p>منصة ارتقي © 2026</p>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

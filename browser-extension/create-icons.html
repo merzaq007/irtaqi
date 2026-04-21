@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Icons</title>
+</head>
+<body>
+  <h2>إنشاء أيقونات الإضافة</h2>
+  <p>اضغط الزر لتحميل الأيقونات:</p>
+  <button onclick="createIcons()">إنشاء الأيقونات</button>
+  
+  <script>
+    function createIcons() {
+      const sizes = [16, 48, 128];
+      
+      sizes.forEach(size => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        
+        // Background gradient
+        const gradient = ctx.createLinearGradient(0, 0, size, size);
+        gradient.addColorStop(0, '#3b82f6');
+        gradient.addColorStop(1, '#f59e0b');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, size, size);
+        
+        // White circle
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Sync icon (arrows)
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth = size / 16;
+        ctx.lineCap = 'round';
+        
+        // Arrow 1
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/5, 0, Math.PI * 1.5);
+        ctx.stroke();
+        
+        // Arrow 2
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/5, Math.PI, Math.PI * 2.5);
+        ctx.stroke();
+        
+        // Download
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `icon${size}.png`;
+          a.click();
+        });
+      });
+      
+      alert('✅ تم إنشاء الأيقونات! احفظها في مجلد browser-extension');
+    }
+  </script>
+</body>
+</html>

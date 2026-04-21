@@ -32,10 +32,10 @@ export default function ModulePage() {
 
   const getFileIcon = (type: string) => {
     switch (type) {
-      case 'PDF': return <FileText className="text-red-500" size={28} strokeWidth={1.5} />;
-      case 'DOC': return <FileIcon className="text-blue-500" size={28} strokeWidth={1.5} />;
-      case 'PPT': return <FileIcon className="text-orange-500" size={28} strokeWidth={1.5} />;
-      default: return <FileText className="text-muted-foreground" size={28} strokeWidth={1.5} />;
+      case 'PDF': return <FileText className="text-red-500 w-5 h-5 sm:w-[22px] sm:h-[22px]" strokeWidth={1.5} />;
+      case 'DOC': return <FileIcon className="text-blue-500 w-5 h-5 sm:w-[22px] sm:h-[22px]" strokeWidth={1.5} />;
+      case 'PPT': return <FileIcon className="text-orange-500 w-5 h-5 sm:w-[22px] sm:h-[22px]" strokeWidth={1.5} />;
+      default: return <FileText className="text-muted-foreground w-5 h-5 sm:w-[22px] sm:h-[22px]" strokeWidth={1.5} />;
     }
   };
 
@@ -67,69 +67,77 @@ export default function ModulePage() {
         {/* Main Content */}
         <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full relative z-10">
           {/* Module Header */}
-          <div className="mb-12 text-center sm:text-right bg-card/80 backdrop-blur-md rounded-3xl p-10 shadow-sm border border-border">
-            <h1 className="text-3xl sm:text-5xl font-extrabold mb-6 leading-normal bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
+          <div className="mb-8 text-center sm:text-right bg-card/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-border">
+            <h1 className="text-2xl sm:text-3xl font-extrabold mb-3 leading-normal bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
               {module.title}
             </h1>
-            <p className="text-muted-foreground text-lg sm:text-xl font-medium">
+            <p className="text-muted-foreground text-base sm:text-lg font-medium">
               تصفح وحمل جميع الملفات والمحاضرات الخاصة بهذا المقياس.
             </p>
           </div>
 
           {/* Files List */}
           {loading ? (
-            <div className="bg-card rounded-2xl p-12 text-center shadow-sm border border-border">
-              <p className="text-muted-foreground text-lg animate-pulse">جاري تحميل الملفات...</p>
+            <div className="bg-card rounded-xl p-8 text-center shadow-sm border border-border">
+              <p className="text-muted-foreground animate-pulse">جاري تحميل الملفات...</p>
             </div>
           ) : files.length === 0 ? (
-            <div className="bg-card rounded-2xl p-12 text-center shadow-sm border border-border">
-              <p className="text-muted-foreground text-lg">لا توجد ملفات حالياً في هذا المقياس.</p>
+            <div className="bg-card rounded-xl p-8 text-center shadow-sm border border-border">
+              <p className="text-muted-foreground">لا توجد ملفات حالياً في هذا المقياس.</p>
             </div>
           ) : (
-            <div className="grid gap-4">
+            <div className="grid gap-3">
               {files.map((file) => (
                 <div
                   key={file.id}
-                  className="group bg-card/90 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:shadow-xl hover:border-primary/40 transition-all duration-500 relative overflow-hidden"
+                  className="group bg-card/90 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:shadow-xl hover:border-primary/40 transition-all duration-500 relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-1.5 h-full bg-gradient-to-b from-primary to-accent transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
 
-                  <div className="flex items-center gap-5 flex-grow">
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform duration-500 ${getFileIconBackground(file.file_type)}`}>
+                  <div className="flex items-center gap-3 sm:gap-4 flex-grow">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 shadow-inner group-hover:scale-110 transition-transform duration-500 ${getFileIconBackground(file.file_type)}`}>
                       {getFileIcon(file.file_type)}
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-card-foreground mb-2 group-hover:text-primary transition-colors">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base sm:text-lg font-bold text-card-foreground mb-1 sm:mb-1.5 group-hover:text-primary transition-colors truncate">
                         {file.file_name}
                       </h3>
-                      <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground font-semibold">
-                        <span className="flex items-center gap-1.5 bg-muted px-3 py-1 rounded-full">
-                          <Calendar size={14} />
-                          {new Date(file.upload_date).toLocaleDateString('ar-DZ')}
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs text-muted-foreground font-semibold">
+                        <span className="flex items-center gap-1 bg-muted px-2 sm:px-2.5 py-0.5 rounded-full">
+                          <Calendar size={11} className="sm:w-3 sm:h-3" />
+                          <span className="text-[10px] sm:text-xs">{new Date(file.upload_date).toLocaleDateString('ar-DZ')}</span>
                         </span>
-                        <span className="bg-primary/10 text-primary px-3 py-1 rounded-full uppercase tracking-wider">
+                        <span className="bg-primary/10 text-primary px-2 sm:px-2.5 py-0.5 rounded-full uppercase tracking-wider text-[10px] sm:text-xs">
                           {file.file_type}
                         </span>
-                        <span className="flex items-center gap-1.5 bg-muted px-3 py-1 rounded-full font-mono">
-                          <HardDrive size={14} />
-                          {file.file_size < 1024 * 1024
-                            ? `${(file.file_size / 1024).toFixed(1)} KB`
-                            : `${(file.file_size / (1024 * 1024)).toFixed(1)} MB`}
+                        <span className="flex items-center gap-1 bg-muted px-2 sm:px-2.5 py-0.5 rounded-full font-mono">
+                          <HardDrive size={11} className="sm:w-3 sm:h-3" />
+                          <span className="text-[10px] sm:text-xs">
+                            {file.file_size < 1024 * 1024
+                              ? `${(file.file_size / 1024).toFixed(1)} KB`
+                              : `${(file.file_size / (1024 * 1024)).toFixed(1)} MB`}
+                          </span>
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <a
-                    href={file.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download={file.file_name}
-                    className="flex items-center justify-center gap-2 w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 px-8 py-3.5 rounded-xl font-bold transition-all duration-300 transform active:scale-95"
+                  <button
+                    onClick={async () => {
+                      const res = await fetch(file.file_url);
+                      const blob = await res.blob();
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = file.file_name;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    }}
+                    className="flex items-center justify-center gap-2 w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold text-sm transition-all duration-300 transform active:scale-95"
                   >
-                    <Download size={20} strokeWidth={2.5} />
+                    <Download size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={2.5} />
                     <span>تحميل</span>
-                  </a>
+                  </button>
                 </div>
               ))}
             </div>
