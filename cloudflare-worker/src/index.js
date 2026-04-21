@@ -135,18 +135,38 @@ async function loginToMoodle(moodleUrl, username, password) {
 }
 
 async function getMoodleCourses(moodleUrl, session) {
+  // مباشرة لقسم تكنولوجيا وهندسة المعلومات
+  const categoryUrl = `${moodleUrl}/course/index.php?categoryid=29773`;
+  
   if (session.type === 'api') {
-    const res = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_course_get_enrolled_courses_by_timeline_classification&moodlewsrestformat=json&classification=all`);
+    const res = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_course_get_courses_by_field&moodlewsrestformat=json&field=category&value=29773`);
     const data = await res.json();
-    return data.courses || [];
+    if (data.courses && data.courses.length > 0) return data.courses;
   }
-  const res = await fetch(`${moodleUrl}/my/`, { headers: { 'Cookie': session.cookies } });
+  
+  // web scraping للقسم
+  const res = await fetch(categoryUrl, { 
+    headers: session.cookies ? { 'Cookie': session.cookies } : {} 
+  });
   const html = await res.text();
   const courses = [];
   const regex = /course\/view\.php\?id=(\d+)/g;
   let match;
-  while ((match = regex.exec(html)) !== null) courses.push({ id: match[1] });
+  const seen = new Set();
+  while ((match = regex.exec(html)) !== null) {
+    if (!seen.has(match[1])) {
+      seen.add(match[1]);
+      courses.push({ id: match[1] });
+    }
+  }
   return courses;
+}
+
+const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'rar'];
+
+function isAllowedFile(filename) {
+  const ext = filename.split('.').pop()?.toLowerCase() || '';
+  return ALLOWED_EXTENSIONS.includes(ext);
 }
 
 async function getCourseFiles(moodleUrl, session, courseId) {
@@ -158,7 +178,9 @@ async function getCourseFiles(moodleUrl, session, courseId) {
       for (const mod of section.modules || []) {
         if (mod.modname === 'resource' && mod.contents) {
           for (const f of mod.contents) {
-            if (f.type === 'file') files.push({ name: f.filename, url: f.fileurl + `&token=${session.token}`, size: f.filesize, courseId });
+            if (f.type === 'file' && isAllowedFile(f.filename)) {
+              files.push({ name: f.filename, url: f.fileurl + `&token=${session.token}`, size: f.filesize, courseId });
+            }
           }
         }
       }
@@ -171,8 +193,10 @@ async function getCourseFiles(moodleUrl, session, courseId) {
   const regex = /pluginfile\.php([^"'\s]+)/g;
   let match;
   while ((match = regex.exec(html)) !== null) {
-    const name = match[1].split('/').pop() || 'file';
-    files.push({ name, url: `${moodleUrl}/pluginfile.php${match[1]}`, size: 0, courseId });
+    const name = decodeURIComponent(match[1].split('/').pop() || 'file');
+    if (isAllowedFile(name)) {
+      files.push({ name, url: `${moodleUrl}/pluginfile.php${match[1]}`, size: 0, courseId });
+    }
   }
   return files;
 }
