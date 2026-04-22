@@ -25,13 +25,15 @@ const iconMap: Record<string, React.ReactNode> = {
 // Skeleton card component
 function ModuleCardSkeleton() {
   return (
-    <div className="bg-card rounded-xl p-4 border border-border animate-pulse">
-      <div className="flex items-start justify-between mb-3">
-        <div className="w-11 h-11 rounded-lg bg-muted" />
-        <div className="w-5 h-5 rounded bg-muted mt-1" />
+    <div className="bg-card rounded-xl p-4 sm:p-5 border border-border animate-pulse">
+      <div className="flex items-center gap-4">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-muted shrink-0" />
+        <div className="flex-grow">
+          <div className="h-5 sm:h-6 bg-muted rounded w-3/4 mb-3" />
+          <div className="h-3 bg-muted rounded w-1/2" />
+        </div>
+        <div className="w-6 h-6 rounded bg-muted shrink-0" />
       </div>
-      <div className="h-5 bg-muted rounded w-3/4 mb-2" />
-      <div className="h-3 bg-muted rounded w-1/3" />
     </div>
   );
 }
@@ -120,8 +122,8 @@ export default function Home() {
             <p className="text-muted-foreground mt-1 text-xs sm:text-sm">اختر المقياس للوصول إلى الملفات والدروس</p>
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+          {/* List Layout */}
+          <div className="flex flex-col gap-3 sm:gap-4 max-w-4xl mx-auto">
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <ModuleCardSkeleton key={i} />)
               : modulesData.map((module) => {
@@ -131,38 +133,44 @@ export default function Home() {
                   <Link
                     key={module.id}
                     to={`/module/${module.id}`}
-                    className="group bg-card backdrop-blur-md rounded-xl p-3 sm:p-4 shadow-sm border border-border active:scale-95 hover:shadow-2xl hover:border-primary/40 transition-all duration-300 ease-out hover:-translate-y-1 relative overflow-hidden"
+                    className="group bg-card backdrop-blur-md rounded-xl p-4 sm:p-5 shadow-sm border border-border active:scale-[0.98] hover:shadow-2xl hover:border-primary/40 transition-all duration-300 ease-out hover:-translate-y-1 relative overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right" />
 
-                    <div className="flex items-start justify-between">
-                      <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-3 transition-all duration-500 shadow-inner group-hover:text-white ${module.color}`}>
+                    <div className="flex items-center gap-4">
+                      {/* Icon */}
+                      <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center transition-all duration-500 shadow-inner group-hover:text-white shrink-0 ${module.color}`}>
                         {iconMap[module.icon]}
                       </div>
-                      <div className="text-muted-foreground group-hover:text-primary transition-colors duration-500 mr-auto mt-1">
-                        <ChevronLeft size={20} strokeWidth={2.5} />
-                      </div>
-                    </div>
 
-                    <h2 className="text-lg font-bold text-card-foreground mb-3 leading-snug group-hover:text-primary transition-colors duration-300">
-                      {module.title}
-                    </h2>
+                      {/* Content */}
+                      <div className="flex-grow min-w-0">
+                        <h2 className="text-lg sm:text-xl font-bold text-card-foreground mb-2 leading-snug group-hover:text-primary transition-colors duration-300">
+                          {module.title}
+                        </h2>
 
-                    {/* Progress bar */}
-                    <div className="mb-2">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-muted-foreground font-semibold">
-                          {hasFiles ? `${count} ملفات متاحة` : 'لا توجد ملفات بعد'}
-                        </span>
-                        {hasFiles && (
-                          <span className="text-xs font-bold text-primary">{count}</span>
-                        )}
+                        {/* Progress bar */}
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-xs sm:text-sm text-muted-foreground font-semibold">
+                              {hasFiles ? `${count} ملفات متاحة` : 'لا توجد ملفات بعد'}
+                            </span>
+                            {hasFiles && (
+                              <span className="text-xs sm:text-sm font-bold text-primary">{count}</span>
+                            )}
+                          </div>
+                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-700"
+                              style={{ width: hasFiles ? `${Math.min((count / 10) * 100, 100)}%` : '0%' }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-700"
-                          style={{ width: hasFiles ? `${Math.min((count / 10) * 100, 100)}%` : '0%' }}
-                        />
+
+                      {/* Arrow */}
+                      <div className="text-muted-foreground group-hover:text-primary transition-colors duration-500 shrink-0">
+                        <ChevronLeft size={24} strokeWidth={2.5} />
                       </div>
                     </div>
                   </Link>
