@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { modulesData } from '../data/modules';
 import {
   Globe, FileText, Network, Server, BookOpen, Database,
-  Shield, Bot, Rocket, Share2, Languages, ChevronLeft, Search
+  Shield, Bot, Rocket, Share2, Languages, ChevronLeft
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { supabase } from '@/lib/supabase';
@@ -39,7 +39,6 @@ function ModuleCardSkeleton() {
 export default function Home() {
   const [fileCounts, setFileCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -61,10 +60,6 @@ export default function Home() {
 
   const totalFiles = Object.values(fileCounts).reduce((a, b) => a + b, 0);
   const activeModules = Object.keys(fileCounts).filter(k => fileCounts[k] > 0).length;
-
-  const filteredModules = modulesData.filter(m =>
-    m.title.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <Layout>
@@ -125,32 +120,14 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-foreground">المقاييس الدراسية</h2>
               <p className="text-muted-foreground mt-1 text-sm">اختر المقياس للوصول إلى الملفات والدروس</p>
             </div>
-            {/* Search */}
-            <div className="relative w-full sm:w-72">
-              <Search size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="ابحث عن مقياس..."
-                className="w-full bg-card border border-border rounded-xl pr-9 pl-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
-                dir="rtl"
-              />
-            </div>
+
           </div>
 
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <ModuleCardSkeleton key={i} />)
-              : filteredModules.length === 0
-              ? (
-                <div className="col-span-full text-center py-16 text-muted-foreground">
-                  <Search size={40} className="mx-auto mb-3 opacity-30" />
-                  <p className="font-medium">لا توجد نتائج لـ "{search}"</p>
-                </div>
-              )
-              : filteredModules.map((module) => {
+              : modulesData.map((module) => {
                 const count = fileCounts[module.id] || 0;
                 const hasFiles = count > 0;
                 return (
