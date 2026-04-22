@@ -149,6 +149,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('scanner.html') });
   });
 
+  // زر مزامنة كل المقاييس المحفوظة
+  const syncAllBtn = document.getElementById('syncAllStoredBtn');
+  if (syncAllBtn) {
+    chrome.storage.local.get('allCourses', (data) => {
+      const count = Object.keys(data.allCourses || {}).length;
+      if (count > 0) {
+        syncAllBtn.textContent = `🔄 مزامنة كل المقاييس (${count})`;
+        syncAllBtn.style.display = 'block';
+      }
+    });
+
+    syncAllBtn.addEventListener('click', async () => {
+      const data = await chrome.storage.local.get('allCourses');
+      const courses = data.allCourses || {};
+      if (Object.keys(courses).length === 0) {
+        showResult('⚠️ افتح أداة المسح أولاً', '#f59e0b');
+        return;
+      }
+      syncAllBtn.disabled = true;
+      syncAllBtn.textContent = '⏳ جاري المزامنة...';
+      chrome.runtime.sendMessage({ type: 'SYNC_ALL_COURSES', courses }, (res) => {
+        syncAllBtn.disabled = false;
+        const count = Object.keys(courses).length;
+        syncAllBtn.textContent = `🔄 مزامنة كل المقاييس (${count})`;
+        showResult(`✅ تم إرسال ${res?.total || 0} ملف`, '#10b981');
+      });
+    });
+  }
+
   // ===== رسم قائمة المقاييس =====
   function renderCourseList(courses, existingMappings) {
     const list = document.getElementById('courseList');

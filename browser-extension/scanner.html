@@ -2,29 +2,79 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>Moodle Scanner</title>
+  <title>Moodle Scanner - ارتقي</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { width: 500px; font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 16px; }
-    h2 { color: #3b82f6; margin-bottom: 12px; font-size: 16px; }
-    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-bottom: 8px; }
-    .btn-blue { background: #3b82f6; color: white; }
+    body {
+      width: 520px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 20px;
+    }
+    h2 { color: #3b82f6; margin-bottom: 4px; font-size: 17px; }
+    .subtitle { font-size: 11px; color: #64748b; margin-bottom: 16px; }
+    .url-badge {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: #3b82f6;
+      direction: ltr;
+      margin-bottom: 14px;
+      word-break: break-all;
+    }
+    .btn {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: opacity 0.2s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-blue  { background: #3b82f6; color: white; }
     .btn-green { background: #10b981; color: white; }
-    .status { font-size: 12px; color: #94a3b8; margin: 8px 0; min-height: 20px; }
-    .result { background: #1e293b; border-radius: 8px; padding: 10px; font-size: 11px; direction: ltr; max-height: 350px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; margin-top: 8px; }
-    .progress { font-size: 11px; color: #f59e0b; margin: 4px 0; }
+    .btn-ghost { background: #1e293b; color: #94a3b8; }
+    .status   { font-size: 12px; color: #94a3b8; margin: 8px 0; min-height: 18px; }
+    .progress { font-size: 11px; color: #f59e0b; margin: 4px 0; min-height: 16px; }
+    .result {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 11px;
+      direction: ltr;
+      max-height: 380px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
   </style>
 </head>
 <body>
-  <h2>🔍 Moodle 3-Level Scanner</h2>
-  <p style="font-size:11px; color:#64748b; margin-bottom:12px;">
-    يجلب تلقائياً: السداسي → المقاييس → course IDs
-  </p>
-  <button class="btn btn-blue" id="scanBtn">🚀 ابدأ المسح التلقائي</button>
+  <h2>🔍 Moodle 3-Layer Scanner</h2>
+  <p class="subtitle">يمسح تلقائياً 3 طبقات من تخصصك ويجمع كل course IDs</p>
+
+  <div class="url-badge">
+    📍 الجذر: moodle.univ-tiaret.dz/course/index.php?categoryid=29773
+  </div>
+
+  <button class="btn btn-blue" id="scanBtn">🚀 ابدأ المسح (3 طبقات)</button>
+  <button class="btn btn-green" id="syncAllBtn" style="display:none;">🔄 مزامنة كل الملفات</button>
+  <button class="btn btn-ghost" id="copyBtn" style="display:none;">📋 نسخ النتائج</button>
+
   <div class="status" id="status">جاهز للمسح...</div>
   <div class="progress" id="progress"></div>
   <div class="result" id="result" style="display:none;"></div>
-  <button class="btn btn-green" id="copyBtn" style="display:none; margin-top:8px;">📋 نسخ النتائج</button>
+
   <script src="scanner.js"></script>
 </body>
 </html>
