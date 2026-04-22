@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Irtaqi Downloader",
+  "version": "2.0",
+  "description": "تحميل دروس Moodle + مراقبة تلقائية + إشعارات Telegram",
+  "permissions": [
+    "downloads",
+    "tabs",
+    "scripting",
+    "storage",
+    "notifications",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://moodle.univ-tiaret.dz/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.svg"
+  },
+  "icons": {
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://moodle.univ-tiaret.dz/course/view.php*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
