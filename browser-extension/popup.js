@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ===== أزرار الروابط =====
   document.getElementById('openMoodleBtn').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=33988' });
+    chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=29773' });
   });
   document.getElementById('openIrtaqiBtn').addEventListener('click', () => {
     chrome.tabs.create({ url: 'https://irtaqi.pages.dev/' });
@@ -211,6 +211,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ===== مسح Course IDs =====
   document.getElementById('openScanPageBtn').addEventListener('click', () => {
     chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=29773' });
+  });
+
+  // فتح أداة المسح مع الرابط الصحيح مباشرة
+  document.getElementById('openScannerBtn').addEventListener('click', async () => {
+    await chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=29773' });
+    setTimeout(() => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('scanner.html') });
+    }, 1500);
   });
 
   document.getElementById('scanBtn').addEventListener('click', async () => {

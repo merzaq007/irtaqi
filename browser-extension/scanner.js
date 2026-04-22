@@ -10,6 +10,10 @@ const syncBtn   = document.getElementById('syncAllBtn');
 
 document.getElementById('scanBtn').addEventListener('click', startScan);
 
+document.getElementById('openMoodleBtn').addEventListener('click', () => {
+  chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=29773' });
+});
+
 copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(resultEl.textContent);
   copyBtn.textContent = '✅ تم النسخ!';
@@ -47,7 +51,12 @@ async function startScan() {
 
   if (!activeTab?.url?.includes('moodle.univ-tiaret.dz')) {
     statusEl.textContent = '❌ افتح صفحة Moodle أولاً';
-    progressEl.textContent = `👉 اذهب إلى: moodle.univ-tiaret.dz/course/index.php?categoryid=${ROOT_CAT}`;
+    progressEl.textContent = '';
+    // افتح الرابط تلقائياً
+    chrome.tabs.create({ url: `https://moodle.univ-tiaret.dz/course/index.php?categoryid=${ROOT_CAT}` });
+    setTimeout(() => {
+      statusEl.textContent = '✅ تم فتح الصفحة — اضغط "ابدأ المسح" مجدداً';
+    }, 2000);
     document.getElementById('scanBtn').disabled = false;
     return;
   }
