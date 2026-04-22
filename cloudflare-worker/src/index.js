@@ -93,6 +93,32 @@ export default {
   }
 };
 
+// خريطة ربط أسماء المقررات في مودل بـ IDs المنصة
+const COURSE_ID_MAP = [
+  { keywords: ['web', 'ويب', 'وثائقية', 'تطبيقات'], moduleId: 'web-apps' },
+  { keywords: ['وثيقة رقمية', 'document', 'رقمية'], moduleId: 'digital-document' },
+  { keywords: ['هندسة المعلومات', 'information engineering'], moduleId: 'info-engineering' },
+  { keywords: ['منصات رقمية', 'digital platform'], moduleId: 'digital-platforms' },
+  { keywords: ['منهجية', 'بحث علمي', 'research methodology'], moduleId: 'research-methodology' },
+  { keywords: ['بيانات البحث', 'research data', 'إدارة بيانات'], moduleId: 'research-data-management' },
+  { keywords: ['حوكمة', 'سمعة', 'governance'], moduleId: 'governance-e-reputation' },
+  { keywords: ['برمجة', 'ذكاء اصطناعي', 'programming', 'ai'], moduleId: 'programming-ai' },
+  { keywords: ['مقاولاتية', 'entrepreneurship', 'ناشئة'], moduleId: 'entrepreneurship' },
+  { keywords: ['شبكات تواصل', 'social network'], moduleId: 'social-networks' },
+  { keywords: ['إنجليزية', 'english', 'anglais'], moduleId: 'english-language' },
+];
+
+function resolveModuleId(courseName) {
+  if (!courseName) return 'moodle_auto_sync';
+  const lower = courseName.toLowerCase();
+  for (const entry of COURSE_ID_MAP) {
+    if (entry.keywords.some(k => lower.includes(k.toLowerCase()))) {
+      return entry.moduleId;
+    }
+  }
+  return 'moodle_auto_sync';
+}
+
 async function syncMoodleFiles(env) {
   const { MOODLE_URL, MOODLE_USERNAME, MOODLE_PASSWORD, SUPABASE_URL, SUPABASE_KEY } = env;
   const session = await loginToMoodle(MOODLE_URL, MOODLE_USERNAME, MOODLE_PASSWORD);
@@ -101,12 +127,13 @@ async function syncMoodleFiles(env) {
   let totalNewFiles = 0;
   const syncedFiles = [];
   for (const course of courses) {
+    const moduleId = resolveModuleId(course.fullname || course.shortname || course.displayname || '');
     const files = await getCourseFiles(MOODLE_URL, session, course.id);
     for (const file of files) {
       const isNew = await isFileNew(SUPABASE_URL, SUPABASE_KEY, file.url);
       if (isNew) {
-        const uploaded = await uploadFileToSupabase(session, file, SUPABASE_URL, SUPABASE_KEY);
-        if (uploaded) { totalNewFiles++; syncedFiles.push(file.name); }
+        const uploaded = await uploadFileToSupabase(session, { ...file, moduleId }, SUPABASE_URL, SUPABASE_KEY);
+        if (uploaded) { totalNewFiles++; syncedFiles.push(`[${moduleId}] ${file.name}`); }
       }
     }
   }
@@ -162,7 +189,7 @@ async function getMoodleCourses(moodleUrl, session) {
   return courses;
 }
 
-const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'rar'];
+const ALLOWED_EXTENSIONS = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
 
 function isAllowedFile(filename) {
   const ext = filename.split('.').pop()?.toLowerCase() || '';
@@ -225,7 +252,7 @@ async function uploadFileToSupabase(session, file, supabaseUrl, supabaseKey) {
     const dbRes = await fetch(`${supabaseUrl}/rest/v1/files`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${supabaseKey}`, 'apikey': supabaseKey, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ file_name: file.name, file_url: fileUrl, file_type: file.name.split('.').pop()?.toUpperCase() || 'FILE', file_size: file.size, module_id: 'moodle_auto_sync' })
+      body: JSON.stringify({ file_name: file.name, file_url: fileUrl, file_type: file.name.split('.').pop()?.toUpperCase() || 'FILE', file_size: file.size, module_id: file.moduleId || 'moodle_auto_sync' })
     });
     return dbRes.ok;
   } catch (e) { return false; }

@@ -1,14 +1,31 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { modulesData } from '../data/modules';
-import { FileText, File as FileIcon, ArrowRight, Download, Calendar, HardDrive } from 'lucide-react';
+import { FileText, File as FileIcon, ArrowRight, Download, Calendar, HardDrive, Eye } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { supabase, DBFile } from '@/lib/supabase';
+
+// Skeleton for file rows
+function FileSkeleton() {
+  return (
+    <div className="bg-card/90 rounded-xl p-3 sm:p-4 border border-border flex items-center gap-4 animate-pulse">
+      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-muted shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 bg-muted rounded w-2/3" />
+        <div className="h-3 bg-muted rounded w-1/3" />
+      </div>
+      <div className="w-24 h-9 bg-muted rounded-lg shrink-0" />
+    </div>
+  );
+}
+
+const FILE_TYPES = ['الكل', 'PDF', 'DOC', 'PPT', 'XLS'];
 
 export default function ModulePage() {
   const { moduleId } = useParams<{ moduleId: string }>();
   const [files, setFiles] = useState<DBFile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('الكل');
 
   const module = modulesData.find(m => m.id === moduleId);
 
@@ -30,6 +47,10 @@ export default function ModulePage() {
 
   if (!module) return <Navigate to="/" replace />;
 
+  const filteredFiles = filter === 'الكل'
+    ? files
+    : files.filter(f => f.file_type === filter);
+
   const getFileIcon = (type: string) => {
     switch (type) {
       case 'PDF': return <FileText className="text-red-500 w-5 h-5 sm:w-[22px] sm:h-[22px]" strokeWidth={1.5} />;
@@ -47,6 +68,20 @@ export default function ModulePage() {
       default: return 'bg-muted text-muted-foreground';
     }
   };
+
+  const handleDownload = async (file: DBFile) => {
+    const res = await fetch(file.file_url);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.file_name;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // available types in current files
+  const availableTypes = ['الكل', ...Array.from(new Set(files.map(f => f.file_type)))];
 
   return (
     <Layout>
@@ -66,28 +101,63 @@ export default function ModulePage() {
 
         {/* Main Content */}
         <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full relative z-10">
+
           {/* Module Header */}
-          <div className="mb-8 text-center sm:text-right bg-card/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-border">
-            <h1 className="text-2xl sm:text-3xl font-extrabold mb-3 leading-normal bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
+          <div className="mb-6 bg-card/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-border">
+            <h1 className="text-2xl sm:text-3xl font-extrabold mb-2 leading-normal bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
               {module.title}
             </h1>
-            <p className="text-muted-foreground text-base sm:text-lg font-medium">
-              تصفح وحمل جميع الملفات والمحاضرات الخاصة بهذا المقياس.
-            </p>
+            <div className="flex items-center gap-3 flex-wrap">
+              <p className="text-muted-foreground text-sm font-medium">
+                تصفح وحمل جميع الملفات والمحاضرات الخاصة بهذا المقياس.
+              </p>
+              {!loading && (
+                <span className="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
+                  {files.length} ملف
+                </span>
+              )}
+            </div>
           </div>
+
+          {/* Filter Tabs */}
+          {!loading && files.length > 0 && (
+            <div className="flex items-center gap-2 mb-5 flex-wrap">
+              {availableTypes.map(type => (
+                <button
+                  key={type}
+                  onClick={() => setFilter(type)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 border ${
+                    filter === type
+                      ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                      : 'bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-primary'
+                  }`}
+                >
+                  {type}
+                  {type !== 'الكل' && (
+                    <span className="mr-1.5 opacity-70">
+                      ({files.filter(f => f.file_type === type).length})
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Files List */}
           {loading ? (
-            <div className="bg-card rounded-xl p-8 text-center shadow-sm border border-border">
-              <p className="text-muted-foreground animate-pulse">جاري تحميل الملفات...</p>
+            <div className="grid gap-3">
+              {Array.from({ length: 4 }).map((_, i) => <FileSkeleton key={i} />)}
             </div>
-          ) : files.length === 0 ? (
-            <div className="bg-card rounded-xl p-8 text-center shadow-sm border border-border">
-              <p className="text-muted-foreground">لا توجد ملفات حالياً في هذا المقياس.</p>
+          ) : filteredFiles.length === 0 ? (
+            <div className="bg-card rounded-xl p-10 text-center shadow-sm border border-border">
+              <FileText size={40} className="mx-auto text-muted-foreground/30 mb-3" />
+              <p className="text-muted-foreground font-medium">
+                {files.length === 0 ? 'لا توجد ملفات حالياً في هذا المقياس.' : `لا توجد ملفات من نوع ${filter}`}
+              </p>
             </div>
           ) : (
             <div className="grid gap-3">
-              {files.map((file) => (
+              {filteredFiles.map((file) => (
                 <div
                   key={file.id}
                   className="group bg-card/90 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-sm border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:shadow-xl hover:border-primary/40 transition-all duration-500 relative overflow-hidden"
@@ -104,14 +174,14 @@ export default function ModulePage() {
                       </h3>
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs text-muted-foreground font-semibold">
                         <span className="flex items-center gap-1 bg-muted px-2 sm:px-2.5 py-0.5 rounded-full">
-                          <Calendar size={11} className="sm:w-3 sm:h-3" />
+                          <Calendar size={11} />
                           <span className="text-[10px] sm:text-xs">{new Date(file.upload_date).toLocaleDateString('ar-DZ')}</span>
                         </span>
                         <span className="bg-primary/10 text-primary px-2 sm:px-2.5 py-0.5 rounded-full uppercase tracking-wider text-[10px] sm:text-xs">
                           {file.file_type}
                         </span>
                         <span className="flex items-center gap-1 bg-muted px-2 sm:px-2.5 py-0.5 rounded-full font-mono">
-                          <HardDrive size={11} className="sm:w-3 sm:h-3" />
+                          <HardDrive size={11} />
                           <span className="text-[10px] sm:text-xs">
                             {file.file_size < 1024 * 1024
                               ? `${(file.file_size / 1024).toFixed(1)} KB`
@@ -122,22 +192,25 @@ export default function ModulePage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={async () => {
-                      const res = await fetch(file.file_url);
-                      const blob = await res.blob();
-                      const url = URL.createObjectURL(blob);
-                      const a = document.createElement('a');
-                      a.href = url;
-                      a.download = file.file_name;
-                      a.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                    className="flex items-center justify-center gap-2 w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg font-bold text-sm transition-all duration-300 transform active:scale-95"
-                  >
-                    <Download size={16} className="sm:w-[18px] sm:h-[18px]" strokeWidth={2.5} />
-                    <span>تحميل</span>
-                  </button>
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <a
+                      href={file.file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 flex-1 sm:flex-none bg-card border border-border hover:border-primary/40 hover:text-primary text-muted-foreground px-4 py-2 sm:py-2.5 rounded-lg font-bold text-sm transition-all duration-300"
+                    >
+                      <Eye size={15} strokeWidth={2.5} />
+                      <span>معاينة</span>
+                    </a>
+                    <button
+                      onClick={() => handleDownload(file)}
+                      className="flex items-center justify-center gap-1.5 flex-1 sm:flex-none bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 px-4 py-2 sm:py-2.5 rounded-lg font-bold text-sm transition-all duration-300 active:scale-95"
+                    >
+                      <Download size={15} strokeWidth={2.5} />
+                      <span>تحميل</span>
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

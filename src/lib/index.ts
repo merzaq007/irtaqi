@@ -24,16 +24,16 @@ export interface Module {
 
 export const MODULES: Module[] = [
   { id: 'web-apps', name: 'تطبيقات الويب في أنظمة المعلومات الوثائقية', icon: 'Globe', materialsCount: 0 },
-  { id: 'digital-doc', name: 'الوثيقة الرقمية', icon: 'FileText', materialsCount: 0 },
+  { id: 'digital-document', name: 'الوثيقة الرقمية', icon: 'FileText', materialsCount: 0 },
   { id: 'info-engineering', name: 'هندسة المعلومات', icon: 'Network', materialsCount: 0 },
   { id: 'digital-platforms', name: 'المنصات الرقمية الوثائقية', icon: 'Server', materialsCount: 0 },
   { id: 'research-methodology', name: 'منهجية البحث العلمي في علم المكتبات والمعلومات 2', icon: 'BookOpen', materialsCount: 0 },
-  { id: 'data-management', name: 'إدارة بيانات البحث', icon: 'Database', materialsCount: 0 },
-  { id: 'governance', name: 'الحوكمة والسمعة الإلكترونية', icon: 'Shield', materialsCount: 0 },
-  { id: 'programming-ai', name: 'البرمجة والذكاء الاصطناعي (2)', icon: 'Code', materialsCount: 0 },
-  { id: 'entrepreneurship', name: 'المقاولاتية والمؤسسات الناشئة', icon: 'Briefcase', materialsCount: 0 },
-  { id: 'social-media', name: 'شبكات التواصل الاجتماعي', icon: 'Share2', materialsCount: 0 },
-  { id: 'english', name: 'اللغة الإنجليزية (2)', icon: 'Languages', materialsCount: 0 },
+  { id: 'research-data-management', name: 'إدارة بيانات البحث', icon: 'Database', materialsCount: 0 },
+  { id: 'governance-e-reputation', name: 'الحوكمة والسمعة الإلكترونية', icon: 'Shield', materialsCount: 0 },
+  { id: 'programming-ai', name: 'البرمجة والذكاء الاصطناعي (2)', icon: 'Bot', materialsCount: 0 },
+  { id: 'entrepreneurship', name: 'المقاولاتية والمؤسسات الناشئة', icon: 'Rocket', materialsCount: 0 },
+  { id: 'social-networks', name: 'شبكات التواصل الاجتماعي', icon: 'Share2', materialsCount: 0 },
+  { id: 'english-language', name: 'اللغة الإنجليزية (2)', icon: 'Languages', materialsCount: 0 },
 ];
 
 export const FILE_TYPES = [

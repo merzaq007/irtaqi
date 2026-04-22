@@ -4,8 +4,11 @@
   "description": "Cloudflare Worker للمزامنة التلقائية بين المودل ومنصة ارتقي",
   "main": "src/index.js",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy"
   },
   "keywords": ["cloudflare", "worker", "moodle", "sync"],
   "author": "بوضلعة عبدالرزاق",
