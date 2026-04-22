@@ -1,20 +1,14 @@
-# نشر Edge Function notify-telegram
-# شغّله مرة واحدة فقط
+# Deploy Edge Function: notify-telegram
+# Run once after: npm install -g supabase
 
-Write-Host "🚀 نشر Edge Function notify-telegram..." -ForegroundColor Cyan
+$token  = Read-Host "Enter Telegram Bot Token"
+$chatId = Read-Host "Enter Telegram Chat ID"
 
-# أدخل بيانات Telegram
-$token  = Read-Host "أدخل Telegram Bot Token"
-$chatId = Read-Host "أدخل Telegram Chat ID"
-
-# نشر الـ function
-Write-Host "`n📤 نشر الـ function..." -ForegroundColor Yellow
+Write-Host "Deploying notify-telegram function..." -ForegroundColor Cyan
 supabase functions deploy notify-telegram --project-ref bdjhurufqkalicjmokbk
 
-# إضافة secrets
-Write-Host "`n🔑 إضافة Telegram secrets..." -ForegroundColor Yellow
+Write-Host "Setting secrets..." -ForegroundColor Yellow
 supabase secrets set TELEGRAM_TOKEN=$token --project-ref bdjhurufqkalicjmokbk
 supabase secrets set TELEGRAM_CHAT_ID=$chatId --project-ref bdjhurufqkalicjmokbk
 
-Write-Host "`n✅ تم! الآن كل ملف جديد سيرسل إشعار Telegram تلقائياً" -ForegroundColor Green
-Write-Host "🔗 اختبر الـ function من Supabase Dashboard > Edge Functions" -ForegroundColor Cyan
+Write-Host "Done! Every new file will trigger a Telegram notification." -ForegroundColor Green
