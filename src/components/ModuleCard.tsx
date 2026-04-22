@@ -24,16 +24,8 @@ export function ModuleCard({ module }: ModuleCardProps) {
             <h3 className="text-xl font-bold text-foreground transition-colors group-hover:text-primary leading-relaxed">
               {module.name}
             </h3>
-            <ChevronLeft
-              className="h-6 w-6 flex-shrink-0 text-muted-foreground transition-all group-hover:translate-x-[-6px] group-hover:text-primary"
-              aria-hidden="true"
-            />
+            <ChevronLeft className="h-6 w-6 flex-shrink-0 text-muted-foreground transition-all group-hover:translate-x-[-6px] group-hover:text-primary" />
           </div>
-          {module.description && (
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              {module.description}
-            </p>
-          )}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/8 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </Card>
       </motion.div>
