@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Irtaqi Moodle Sync",
-  "version": "1.0",
+  "version": "1.1",
   "description": "مزامنة تلقائية بين المودل ومنصة ارتقي",
   "permissions": [
     "storage",
     "notifications",
     "tabs",
-    "alarms"
+    "alarms",
+    "scripting"
   ],
   "host_permissions": [
     "https://moodle.univ-tiaret.dz/*",
@@ -24,6 +25,17 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html"
-  }
+    "default_popup": "popup.html",
+    "default_icon": "icon.svg"
+  },
+  "icons": {
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["scanner.html", "scanner.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

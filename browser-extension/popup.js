@@ -1,7 +1,6 @@
 // Popup Script - Irtaqi Sync
 document.addEventListener('DOMContentLoaded', async () => {
 
-  // ===== المقاييس في المنصة =====
   const PLATFORM_MODULES = [
     { id: 'web-apps',                 name: 'تطبيقات الويب' },
     { id: 'digital-document',         name: 'الوثيقة الرقمية' },
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const stored = await chrome.storage.local.get(['supabaseKey', 'totalSynced', 'lastSync', 'courseMappings']);
   const mappings = stored.courseMappings || {};
 
-  // حالة الاتصال
   if (stored.supabaseKey) {
     document.getElementById('statusDot').className = 'status-dot dot-green';
     document.getElementById('statusText').textContent = 'متصل';
@@ -30,6 +28,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('totalSynced').textContent = stored.totalSynced || 0;
   document.getElementById('mappedCount').textContent = Object.keys(mappings).length;
   if (stored.lastSync) document.getElementById('lastSync').textContent = `آخر مزامنة: ${stored.lastSync}`;
+
+  // ===== مساعد عرض النتيجة =====
+  function showResult(msg, color) {
+    const result = document.getElementById('syncResult');
+    const text = document.getElementById('syncResultText');
+    result.style.display = 'block';
+    text.style.color = color;
+    text.textContent = msg;
+    setTimeout(() => { result.style.display = 'none'; }, 4000);
+  }
 
   // ===== التبويبات =====
   document.querySelectorAll('.tab').forEach(tab => {
@@ -45,8 +53,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('syncNowBtn').addEventListener('click', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const btn = document.getElementById('syncNowBtn');
-    const result = document.getElementById('syncResult');
-    const resultText = document.getElementById('syncResultText');
 
     if (!tab?.url?.includes('moodle.univ-tiaret.dz')) {
       showResult('⚠️ افتح صفحة المودل أولاً', '#f59e0b');
@@ -56,7 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.textContent = '⏳ جاري المزامنة...';
     btn.disabled = true;
 
-    // استخراج الـ courseId من الرابط
     const courseId = new URL(tab.url).searchParams.get('id');
     const moduleId = courseId ? (mappings[courseId] || 'moodle_auto_sync') : 'moodle_auto_sync';
 
@@ -74,7 +79,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         showResult('ℹ️ لا توجد ملفات جديدة في هذه الصفحة', '#64748b');
       } else {
         showResult(`✅ تم إرسال ${count} ملف للمزامنة`, '#10b981');
-        // تحديث العداد
         const newTotal = (stored.totalSynced || 0) + count;
         document.getElementById('totalSynced').textContent = newTotal;
       }
@@ -87,7 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.textContent = '⏳ جاري التحميل...';
     btn.disabled = true;
 
-    // عرض المقاييس مباشرة من الخريطة المعروفة
     const knownCourses = [
       { id: '33988', name: 'تطبيقات الويب في أنظمة المعلومات الوثائقية', moduleId: 'web-apps' },
       { id: '33989', name: 'الوثيقة الرقمية', moduleId: 'digital-document' },
@@ -117,8 +120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     await chrome.storage.local.set({ courseMappings: newMappings });
-
-    // حفظ الـ moduleId لكل course في storage
     for (const [courseId, moduleId] of Object.entries(newMappings)) {
       await chrome.storage.local.set({ [`course_${courseId}`]: moduleId });
     }
@@ -144,6 +145,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('openIrtaqiBtn').addEventListener('click', () => {
     chrome.tabs.create({ url: 'https://irtaqi-1gy.pages.dev' });
   });
+  document.getElementById('openScannerBtn').addEventListener('click', () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL('scanner.html') });
+  });
 
   // ===== رسم قائمة المقاييس =====
   function renderCourseList(courses, existingMappings) {
@@ -153,8 +157,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     courses.forEach(course => {
       const item = document.createElement('div');
       item.className = 'course-item';
-
-      // استخدام moduleId المحدد مسبقاً أو من الـ mappings
       const mapped = course.moduleId || existingMappings[course.id];
 
       item.innerHTML = `
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         </select>
       `;
 
-      item.querySelector('select').addEventListener('change', function() {
+      item.querySelector('select').addEventListener('change', function () {
         this.className = `course-select ${this.value ? 'mapped' : ''}`;
       });
 
@@ -177,12 +179,83 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('saveMappingBtn').style.display = 'block';
   }
 
-  function showResult(msg, color) {
-    const result = document.getElementById('syncResult');
-    const text = document.getElementById('syncResultText');
-    result.style.display = 'block';
-    text.style.color = color;
-    text.textContent = msg;
-    setTimeout(() => { result.style.display = 'none'; }, 4000);
-  }
+  // ===== مسح Course IDs =====
+  document.getElementById('openScanPageBtn').addEventListener('click', () => {
+    chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=29773' });
+  });
+
+  document.getElementById('scanBtn').addEventListener('click', async () => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const btn = document.getElementById('scanBtn');
+
+    if (!tab?.url?.includes('moodle.univ-tiaret.dz')) {
+      alert('⚠️ افتح صفحة Moodle أولاً:\nmoodle.univ-tiaret.dz/course/index.php?categoryid=33988');
+      return;
+    }
+
+    btn.textContent = '⏳ جاري المسح...';
+    btn.disabled = true;
+
+    try {
+      const injectionResults = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => {
+          const results = {};
+          document.querySelectorAll('a[href*="course/view.php"], a[href*="enrol/index.php"]').forEach(a => {
+            const match = a.href.match(/[?&]id=(\d+)/);
+            if (!match) return;
+            const courseId = match[1];
+            if (results[courseId]) return;
+            let name = a.textContent.trim().replace(/\s+/g, ' ');
+            if (!name || name.length < 3) {
+              const parent = a.closest('.coursebox, li, .card, .activity');
+              if (parent) name = parent.querySelector('h2,h3,h4,.coursename')?.textContent?.trim() || name;
+            }
+            const catMatch = window.location.href.match(/categoryid=(\d+)/);
+            results[courseId] = {
+              name: name.substring(0, 80),
+              catId: catMatch ? catMatch[1] : 'unknown',
+              url: a.href
+            };
+          });
+          return results;
+        }
+      });
+
+      btn.textContent = '🔍 مسح وجلب كل course IDs';
+      btn.disabled = false;
+
+      const data = injectionResults?.[0]?.result;
+
+      if (!data || Object.keys(data).length === 0) {
+        document.getElementById('scanResult').textContent =
+          '⚠️ لم يتم العثور على مقاييس.\nافتح صفحة مقياس مثل:\nhttps://moodle.univ-tiaret.dz/course/index.php?categoryid=33988';
+        document.getElementById('scanResultSection').style.display = 'block';
+        return;
+      }
+
+      const lines = Object.entries(data).map(([id, info]) =>
+        `ID: ${id} | ${info.name}`
+      ).join('\n');
+
+      document.getElementById('scanResult').textContent = lines;
+      document.getElementById('scanResultSection').style.display = 'block';
+      await chrome.storage.local.set({ scannedCourses: data });
+
+    } catch (e) {
+      btn.textContent = '🔍 مسح وجلب كل course IDs';
+      btn.disabled = false;
+      document.getElementById('scanResult').textContent = '❌ خطأ: ' + e.message;
+      document.getElementById('scanResultSection').style.display = 'block';
+    }
+  });
+
+  document.getElementById('copyScanBtn').addEventListener('click', () => {
+    const text = document.getElementById('scanResult').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      document.getElementById('copyScanBtn').textContent = '✅ تم النسخ!';
+      setTimeout(() => { document.getElementById('copyScanBtn').textContent = '📋 نسخ النتائج'; }, 2000);
+    });
+  });
+
 });

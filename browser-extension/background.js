@@ -137,7 +137,7 @@ async function getStats() {
 function notify(title, message) {
   chrome.notifications.create(`notif_${Date.now()}`, {
     type: 'basic',
-    iconUrl: 'icons/icon48.png',
+    iconUrl: 'icon.svg',
     title,
     message
   });
