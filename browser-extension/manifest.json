@@ -6,11 +6,12 @@
   "permissions": [
     "storage",
     "notifications",
-    "tabs"
+    "tabs",
+    "alarms"
   ],
   "host_permissions": [
     "https://moodle.univ-tiaret.dz/*",
-    "http://localhost:8080/*",
+    "https://bdjhurufqkalicjmokbk.supabase.co/*",
     "https://irtaqi-1gy.pages.dev/*"
   ],
   "background": {

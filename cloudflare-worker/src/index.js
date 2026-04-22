@@ -93,29 +93,36 @@ export default {
   }
 };
 
-// خريطة ربط أسماء المقررات في مودل بـ IDs المنصة
-const COURSE_ID_MAP = [
-  { keywords: ['web', 'ويب', 'وثائقية', 'تطبيقات'], moduleId: 'web-apps' },
-  { keywords: ['وثيقة رقمية', 'document', 'رقمية'], moduleId: 'digital-document' },
-  { keywords: ['هندسة المعلومات', 'information engineering'], moduleId: 'info-engineering' },
-  { keywords: ['منصات رقمية', 'digital platform'], moduleId: 'digital-platforms' },
-  { keywords: ['منهجية', 'بحث علمي', 'research methodology'], moduleId: 'research-methodology' },
-  { keywords: ['بيانات البحث', 'research data', 'إدارة بيانات'], moduleId: 'research-data-management' },
-  { keywords: ['حوكمة', 'سمعة', 'governance'], moduleId: 'governance-e-reputation' },
-  { keywords: ['برمجة', 'ذكاء اصطناعي', 'programming', 'ai'], moduleId: 'programming-ai' },
-  { keywords: ['مقاولاتية', 'entrepreneurship', 'ناشئة'], moduleId: 'entrepreneurship' },
-  { keywords: ['شبكات تواصل', 'social network'], moduleId: 'social-networks' },
-  { keywords: ['إنجليزية', 'english', 'anglais'], moduleId: 'english-language' },
-];
+// ربط مباشر بين categoryid في Moodle و module_id في المنصة
+const CATEGORY_MODULE_MAP = {
+  '33988': 'web-apps',
+  '33989': 'digital-document',
+  '35841': 'info-engineering',
+  '33990': 'digital-platforms',
+  '33991': 'research-methodology',
+  '33992': 'research-data-management',
+  '33993': 'governance-e-reputation',
+  '33994': 'programming-ai',
+  '33995': 'entrepreneurship',
+  '33996': 'social-networks',
+  '33997': 'english-language',
+};
 
 function resolveModuleId(courseName) {
+  // fallback بالكلمات المفتاحية إذا لم يُعرف الـ categoryid
   if (!courseName) return 'moodle_auto_sync';
   const lower = courseName.toLowerCase();
-  for (const entry of COURSE_ID_MAP) {
-    if (entry.keywords.some(k => lower.includes(k.toLowerCase()))) {
-      return entry.moduleId;
-    }
-  }
+  if (lower.includes('ويب') || lower.includes('web')) return 'web-apps';
+  if (lower.includes('وثيقة رقمية')) return 'digital-document';
+  if (lower.includes('هندسة المعلومات')) return 'info-engineering';
+  if (lower.includes('منصات رقمية')) return 'digital-platforms';
+  if (lower.includes('منهجية') || lower.includes('بحث علمي')) return 'research-methodology';
+  if (lower.includes('بيانات البحث') || lower.includes('إدارة بيانات')) return 'research-data-management';
+  if (lower.includes('حوكمة') || lower.includes('سمعة')) return 'governance-e-reputation';
+  if (lower.includes('برمجة') || lower.includes('ذكاء')) return 'programming-ai';
+  if (lower.includes('مقاولاتية') || lower.includes('ناشئة')) return 'entrepreneurship';
+  if (lower.includes('شبكات تواصل')) return 'social-networks';
+  if (lower.includes('إنجليزية') || lower.includes('english')) return 'english-language';
   return 'moodle_auto_sync';
 }
 
@@ -127,7 +134,9 @@ async function syncMoodleFiles(env) {
   let totalNewFiles = 0;
   const syncedFiles = [];
   for (const course of courses) {
-    const moduleId = resolveModuleId(course.fullname || course.shortname || course.displayname || '');
+    // استخدام categoryId للربط المباشر، وإلا الاسم
+    const moduleId = CATEGORY_MODULE_MAP[course.categoryId]
+      || resolveModuleId(course.fullname || course.shortname || course.displayname || '');
     const files = await getCourseFiles(MOODLE_URL, session, course.id);
     for (const file of files) {
       const isNew = await isFileNew(SUPABASE_URL, SUPABASE_KEY, file.url);
@@ -162,30 +171,42 @@ async function loginToMoodle(moodleUrl, username, password) {
 }
 
 async function getMoodleCourses(moodleUrl, session) {
-  // مباشرة لقسم تكنولوجيا وهندسة المعلومات
-  const categoryUrl = `${moodleUrl}/course/index.php?categoryid=29773`;
-  
-  if (session.type === 'api') {
-    const res = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_course_get_courses_by_field&moodlewsrestformat=json&field=category&value=29773`);
-    const data = await res.json();
-    if (data.courses && data.courses.length > 0) return data.courses;
-  }
-  
-  // web scraping للقسم
-  const res = await fetch(categoryUrl, { 
-    headers: session.cookies ? { 'Cookie': session.cookies } : {} 
-  });
-  const html = await res.text();
+  // المقاييس معروفة مسبقاً بـ categoryid الخاص بكل منها
+  const knownCategories = Object.keys(CATEGORY_MODULE_MAP);
   const courses = [];
-  const regex = /course\/view\.php\?id=(\d+)/g;
-  let match;
-  const seen = new Set();
-  while ((match = regex.exec(html)) !== null) {
-    if (!seen.has(match[1])) {
-      seen.add(match[1]);
-      courses.push({ id: match[1] });
+
+  for (const catId of knownCategories) {
+    // جلب المقررات من كل category مباشرة
+    if (session.type === 'api') {
+      try {
+        const res = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_course_get_courses_by_field&moodlewsrestformat=json&field=category&value=${catId}`);
+        const data = await res.json();
+        if (data.courses && data.courses.length > 0) {
+          for (const c of data.courses) {
+            courses.push({ ...c, categoryId: catId });
+          }
+        }
+      } catch (e) { /* تجاهل الأخطاء */ }
+    } else {
+      // web scraping: جلب صفحة الـ category
+      try {
+        const res = await fetch(`${moodleUrl}/course/index.php?categoryid=${catId}`, {
+          headers: { 'Cookie': session.cookies }
+        });
+        const html = await res.text();
+        const regex = /course\/view\.php\?id=(\d+)/g;
+        let match;
+        const seen = new Set();
+        while ((match = regex.exec(html)) !== null) {
+          if (!seen.has(match[1])) {
+            seen.add(match[1]);
+            courses.push({ id: match[1], categoryId: catId });
+          }
+        }
+      } catch (e) { /* تجاهل */ }
     }
   }
+
   return courses;
 }
 

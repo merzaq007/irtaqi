@@ -1,186 +1,116 @@
-// Content Script - يعمل على صفحات المودل
-console.log('🚀 Irtaqi Moodle Sync - Active');
+// Content Script - Irtaqi Moodle Sync
+console.log('🚀 Irtaqi Sync - Content Active');
 
-// مراقبة الملفات في المودل - محسّن
-function detectNewFiles() {
-  const files = [];
-  
-  // البحث عن روابط الملفات بطرق متعددة
-  const selectors = [
-    'a[href*="mod/resource"]',
-    'a[href*="pluginfile.php"]',
-    'a[href*="/mod/folder/"]',
-    'a.aalink[href*="resource"]',
-    'div.activityinstance a',
-    'span.instancename a',
-    '.activity.resource a',
-    '.modtype_resource a'
-  ];
-  
-  const allLinks = new Set();
-  
-  selectors.forEach(selector => {
-    document.querySelectorAll(selector).forEach(link => {
-      allLinks.add(link);
+const MOODLE_BASE = 'https://moodle.univ-tiaret.dz';
+
+// ربط مباشر بين categoryid في Moodle و module_id في المنصة
+const CATEGORY_MODULE_MAP = {
+  '33988': 'web-apps',
+  '33989': 'digital-document',
+  '35841': 'info-engineering',
+  '33990': 'digital-platforms',
+  '33991': 'research-methodology',
+  '33992': 'research-data-management',
+  '33993': 'governance-e-reputation',
+  '33994': 'programming-ai',
+  '33995': 'entrepreneurship',
+  '33996': 'social-networks',
+  '33997': 'english-language',
+};
+
+// ===== استخراج روابط المقاييس من صفحة القسم =====
+function extractCoursesFromCategory() {
+  const courses = [];
+  const seen = new Set();
+
+  // استخراج المقاييس من الـ dropdown أو الـ category tree
+  // الـ dropdown يحتوي على كل الـ categories بـ value="/course/index.php?categoryid=XXXX"
+  document.querySelectorAll('select[name="jump"] option, a[href*="categoryid="]').forEach(el => {
+    const href = el.value || el.href || '';
+    const match = href.match(/categoryid=(\d+)/);
+    if (!match) return;
+
+    const catId = match[1];
+    if (!CATEGORY_MODULE_MAP[catId]) return; // فقط مقاييسنا
+    if (seen.has(catId)) return;
+    seen.add(catId);
+
+    const name = el.textContent?.trim().split('/').pop()?.trim() || `مقياس ${catId}`;
+    courses.push({
+      id: catId,
+      name,
+      url: `https://moodle.univ-tiaret.dz/course/index.php?categoryid=${catId}`,
+      moduleId: CATEGORY_MODULE_MAP[catId],
+      isCategory: true
     });
   });
-  
-  console.log(`🔍 Found ${allLinks.size} potential file links`);
-  
-  allLinks.forEach(link => {
-    const href = link.href;
-    let fileName = link.textContent.trim();
-    
-    // تنظيف اسم الملف
-    fileName = fileName.replace(/\s+/g, ' ').trim();
-    
-    // استخراج معلومات الملف
-    if (fileName && (href.includes('pluginfile.php') || href.includes('mod/resource') || href.includes('mod/folder'))) {
-      // محاولة استخراج اسم الملف من الرابط إذا كان النص فارغاً
-      if (!fileName || fileName.length < 3) {
-        const urlParts = href.split('/');
-        fileName = urlParts[urlParts.length - 1] || 'file';
-      }
-      
-      const fileInfo = {
-        name: fileName,
-        url: href,
-        courseName: getCourseNameFromPage(),
-        timestamp: Date.now()
-      };
-      
-      files.push(fileInfo);
-      console.log('📄 File detected:', fileName);
-    }
+
+  console.log('[Irtaqi] Found courses:', courses.length);
+  return courses;
+}
+
+// ===== استخراج الملفات من صفحة مقياس =====
+function extractFilesFromCourse(moduleId) {
+  const files = [];
+  const seen = new Set();
+
+  // روابط الملفات المباشرة
+  document.querySelectorAll('a[href*="pluginfile.php"], a[href*="mod/resource"]').forEach(link => {
+    const url = link.href;
+    if (seen.has(url)) return;
+
+    // فقط الملفات المسموح بها
+    const ext = url.split('?')[0].split('.').pop()?.toLowerCase();
+    const allowed = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
+    if (!allowed.includes(ext) && !url.includes('mod/resource')) return;
+
+    seen.add(url);
+
+    let name = link.querySelector('.instancename, span')?.textContent?.trim()
+      || link.textContent.trim()
+      || decodeURIComponent(url.split('/').pop()?.split('?')[0] || 'file');
+    name = name.replace(/\s+/g, ' ').trim();
+
+    files.push({ name, url, moduleId });
   });
-  
+
   return files;
 }
 
-// الحصول على اسم المقرر من الصفحة
-function getCourseNameFromPage() {
-  const selectors = [
-    '.page-header-headings h1',
-    '.course-title',
-    'h1.h2',
-    '.page-context-header h1',
-    '#page-header h1'
-  ];
-  
-  for (const selector of selectors) {
-    const element = document.querySelector(selector);
-    if (element) {
-      return element.textContent.trim();
-    }
-  }
-  
-  return 'Unknown Course';
-}
-
-// إرسال الملفات للخلفية
-function sendFilesToBackground(files) {
-  if (files.length > 0) {
-    console.log(`📤 Sending ${files.length} files to background`);
-    chrome.runtime.sendMessage({
-      type: 'NEW_FILES_DETECTED',
-      files: files
-    });
-  } else {
-    console.log('⚠️ No files found on this page');
-  }
-}
-
-// مراقبة التغييرات في الصفحة
-const observer = new MutationObserver(() => {
-  const files = detectNewFiles();
-  sendFilesToBackground(files);
-});
-
-// بدء المراقبة
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});
-
-// فحص أولي عند تحميل الصفحة
-setTimeout(() => {
-  console.log('🔍 Initial scan...');
-  const files = detectNewFiles();
-  sendFilesToBackground(files);
-}, 2000);
-
-// إضافة زر مزامنة سريع في المودل
-function addSyncButton() {
-  const navbar = document.querySelector('.navbar, .page-header, body');
-  if (navbar && !document.getElementById('irtaqi-sync-btn')) {
-    const btn = document.createElement('button');
-    btn.id = 'irtaqi-sync-btn';
-    btn.innerHTML = '🔄 مزامنة مع ارتقي';
-    btn.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: linear-gradient(135deg, #3b82f6, #f59e0b);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 25px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-      z-index: 9999;
-      font-family: 'Cairo', sans-serif;
-      transition: all 0.3s;
-    `;
-    
-    btn.onmouseover = () => {
-      btn.style.transform = 'scale(1.05)';
-      btn.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.6)';
-    };
-    
-    btn.onmouseout = () => {
-      btn.style.transform = 'scale(1)';
-      btn.style.boxShadow = '0 4px 15px rgba(59, 130, 246, 0.4)';
-    };
-    
-    btn.onclick = () => {
-      console.log('🔄 Manual sync triggered');
-      const files = detectNewFiles();
-      
-      if (files.length > 0) {
-        chrome.runtime.sendMessage({
-          type: 'MANUAL_SYNC',
-          files: files
-        });
-        btn.innerHTML = `✅ تمت المزامنة! (${files.length} ملف)`;
-        setTimeout(() => {
-          btn.innerHTML = '🔄 مزامنة مع ارتقي';
-        }, 3000);
-      } else {
-        btn.innerHTML = '❌ لا توجد ملفات في هذه الصفحة';
-        setTimeout(() => {
-          btn.innerHTML = '🔄 مزامنة مع ارتقي';
-        }, 3000);
-      }
-    };
-    
-    document.body.appendChild(btn);
-    console.log('✅ Sync button added');
-  }
-}
-
-// إضافة الزر بعد تحميل الصفحة
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', addSyncButton);
-} else {
-  addSyncButton();
-}
-
-// استماع للرسائل من popup
+// ===== استماع للرسائل =====
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'TRIGGER_SYNC') {
-    const files = detectNewFiles();
-    sendFilesToBackground(files);
-    sendResponse({ success: true, fileCount: files.length });
+
+  // طلب استخراج المقاييس من صفحة القسم
+  if (message.type === 'GET_COURSES') {
+    const courses = extractCoursesFromCategory();
+    sendResponse({ courses });
   }
+
+  // مزامنة يدوية أو تلقائية
+  if (message.type === 'TRIGGER_SYNC' || message.type === 'AUTO_SCAN') {
+    const moduleId = message.moduleId || 'moodle_auto_sync';
+    const files = extractFilesFromCourse(moduleId);
+    if (files.length > 0) {
+      chrome.runtime.sendMessage({ type: 'FILES_FOUND', files });
+    }
+    sendResponse({ files });
+  }
+
+  return true;
 });
+
+// ===== فحص تلقائي عند تحميل صفحة مقياس =====
+if (window.location.href.includes('course/view.php')) {
+  setTimeout(() => {
+    // استرجاع الـ moduleId المحفوظ لهذا الكورس
+    const courseId = new URL(window.location.href).searchParams.get('id');
+    chrome.storage.local.get(`course_${courseId}`, (data) => {
+      const moduleId = data[`course_${courseId}`] || 'moodle_auto_sync';
+      const files = extractFilesFromCourse(moduleId);
+      if (files.length > 0) {
+        chrome.runtime.sendMessage({ type: 'FILES_FOUND', files });
+        console.log(`📤 Auto-sync: ${files.length} files from course ${courseId}`);
+      }
+    });
+  }, 2000);
+}

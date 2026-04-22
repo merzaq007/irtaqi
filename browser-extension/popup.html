@@ -2,152 +2,210 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Irtaqi Moodle Sync</title>
+  <title>Irtaqi Sync</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      width: 350px;
-      padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      width: 380px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
     }
-    
     .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    
-    .header h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-    
-    .header p {
-      font-size: 12px;
-      opacity: 0.9;
-    }
-    
-    .status {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      backdrop-filter: blur(10px);
-    }
-    
-    .status-item {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      padding: 16px 20px;
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 14px;
+      align-items: center;
+      gap: 10px;
     }
-    
-    .status-item:last-child {
-      margin-bottom: 0;
+    .header h1 { font-size: 18px; font-weight: 800; }
+    .header p { font-size: 11px; opacity: 0.85; }
+    .section {
+      padding: 14px 16px;
+      border-bottom: 1px solid #1e293b;
     }
-    
-    .badge {
-      background: rgba(255, 255, 255, 0.3);
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-weight: bold;
-    }
-    
-    .settings {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
-    
-    .settings h3 {
-      font-size: 16px;
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       margin-bottom: 10px;
     }
-    
+    .stat-row {
+      display: flex;
+      gap: 8px;
+    }
+    .stat {
+      flex: 1;
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .stat-num { font-size: 22px; font-weight: 800; color: #3b82f6; }
+    .stat-label { font-size: 10px; color: #64748b; margin-top: 2px; }
     input {
       width: 100%;
-      padding: 8px;
-      border: none;
-      border-radius: 5px;
-      margin-bottom: 10px;
+      padding: 9px 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
       font-size: 12px;
       direction: ltr;
-      text-align: left;
+      outline: none;
     }
-    
-    button {
+    input:focus { border-color: #3b82f6; }
+    .btn {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 13px;
       cursor: pointer;
-      font-size: 14px;
-      transition: all 0.3s;
+      transition: all 0.2s;
+      margin-top: 8px;
     }
-    
-    .btn-primary {
-      background: white;
-      color: #667eea;
-      margin-bottom: 10px;
+    .btn-blue { background: #3b82f6; color: white; }
+    .btn-blue:hover { background: #2563eb; }
+    .btn-green { background: #10b981; color: white; }
+    .btn-green:hover { background: #059669; }
+    .btn-ghost { background: #1e293b; color: #94a3b8; }
+    .btn-ghost:hover { background: #334155; color: #e2e8f0; }
+    .status-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-left: 6px;
     }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    .dot-green { background: #10b981; }
+    .dot-red { background: #ef4444; }
+
+    /* قائمة المقاييس */
+    .course-list { max-height: 220px; overflow-y: auto; }
+    .course-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #1e293b;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
     }
-    
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-    }
-    
-    .footer {
-      text-align: center;
+    .course-name { flex: 1; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .course-select {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #94a3b8;
       font-size: 11px;
-      opacity: 0.8;
-      margin-top: 15px;
+      padding: 3px 6px;
+      max-width: 130px;
     }
+    .course-select.mapped { border-color: #10b981; color: #10b981; }
+    .empty-state {
+      text-align: center;
+      padding: 20px;
+      color: #475569;
+      font-size: 12px;
+    }
+    .tabs {
+      display: flex;
+      background: #1e293b;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #64748b;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .last-sync { font-size: 11px; color: #475569; margin-top: 6px; text-align: center; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
   </style>
 </head>
 <body>
-  <div class="header">
+
+<div class="header">
+  <div>
     <h1>🚀 Irtaqi Sync</h1>
     <p>مزامنة تلقائية مع المودل</p>
   </div>
-  
-  <div class="status">
-    <div class="status-item">
-      <span>الحالة:</span>
-      <span class="badge" id="status">⏳ جاري التحقق...</span>
+  <div style="margin-right: auto; font-size: 12px;" id="connStatus">
+    <span class="status-dot dot-red" id="statusDot"></span>
+    <span id="statusText">غير متصل</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="main">الرئيسية</div>
+  <div class="tab" data-tab="courses">المقاييس</div>
+  <div class="tab" data-tab="settings">الإعدادات</div>
+</div>
+
+<!-- الرئيسية -->
+<div class="tab-content active" id="tab-main">
+  <div class="section">
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num" id="totalSynced">0</div>
+        <div class="stat-label">ملف مزامن</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="mappedCount">0</div>
+        <div class="stat-label">مقياس مربوط</div>
+      </div>
     </div>
-    <div class="status-item">
-      <span>الملفات المزامنة:</span>
-      <span class="badge" id="fileCount">0</span>
+    <div class="last-sync" id="lastSync">لم تتم مزامنة بعد</div>
+  </div>
+  <div class="section">
+    <button class="btn btn-green" id="syncNowBtn">🔄 مزامنة الآن</button>
+    <button class="btn btn-ghost" id="openMoodleBtn">🌐 فتح المودل</button>
+    <button class="btn btn-ghost" id="openIrtaqiBtn">📚 فتح منصة ارتقي</button>
+  </div>
+  <div class="section" id="syncResult" style="display:none;">
+    <div id="syncResultText" style="font-size:13px; text-align:center;"></div>
+  </div>
+</div>
+
+<!-- المقاييس -->
+<div class="tab-content" id="tab-courses">
+  <div class="section">
+    <div class="section-title">ربط المقاييس بالمنصة</div>
+    <p style="font-size:11px; color:#64748b; margin-bottom:10px;">
+      افتح صفحة القسم في المودل ثم اضغط "استخراج المقاييس"
+    </p>
+    <button class="btn btn-blue" id="extractCoursesBtn">🔍 استخراج المقاييس من المودل</button>
+  </div>
+  <div class="section">
+    <div class="course-list" id="courseList">
+      <div class="empty-state">افتح صفحة القسم في المودل أولاً</div>
     </div>
+    <button class="btn btn-green" id="saveMappingBtn" style="display:none;">💾 حفظ الربط</button>
   </div>
-  
-  <div class="settings">
-    <h3>⚙️ الإعدادات</h3>
-    <input type="text" id="supabaseKey" placeholder="Supabase Anon Key">
-    <button class="btn-primary" id="saveBtn">حفظ الإعدادات</button>
+</div>
+
+<!-- الإعدادات -->
+<div class="tab-content" id="tab-settings">
+  <div class="section">
+    <div class="section-title">Supabase Key</div>
+    <input type="password" id="supabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+    <button class="btn btn-blue" id="saveSettingsBtn">💾 حفظ</button>
   </div>
-  
-  <button class="btn-primary" id="syncBtn">🔄 مزامنة الآن</button>
-  <button class="btn-secondary" id="openIrtaqi">📚 فتح منصة ارتقي</button>
-  
-  <div class="footer">
-    <p>منصة ارتقي © 2026</p>
-  </div>
-  
-  <script src="popup.js"></script>
+</div>
+
+<script src="popup.js"></script>
 </body>
 </html>

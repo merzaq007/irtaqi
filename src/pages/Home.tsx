@@ -65,7 +65,7 @@ export default function Home() {
     <Layout>
       <div className="flex flex-col">
         {/* Hero Section */}
-        <header className="relative overflow-hidden min-h-[320px] sm:min-h-[420px] flex items-center justify-center">
+        <header className="relative overflow-hidden min-h-[260px] sm:min-h-[420px] flex items-center justify-center">
           <div className="absolute inset-0">
             <img
               src="/library.png"
@@ -75,15 +75,15 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
           </div>
 
-          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-24">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-1.5 mb-5">
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-white/90 text-sm font-medium">جامعة ابن خلدون تيارت - السنة أولى ماستر</span>
+          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-10 sm:py-24">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 mb-4">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse shrink-0" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">جامعة ابن خلدون تيارت - السنة أولى ماستر</span>
             </div>
-            <h1 className="text-4xl sm:text-7xl font-extrabold mb-4 tracking-tight text-white drop-shadow-lg">
+            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold mb-3 tracking-tight text-white drop-shadow-lg">
               منصة ارتقِي
             </h1>
-            <p className="text-base sm:text-xl text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
+            <p className="text-sm sm:text-xl text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
               المنصة الأكاديمية لطلبة السنة أولى ماستر — تخصص تكنولوجيا وهندسة المعلومات
             </p>
           </div>
@@ -92,39 +92,36 @@ export default function Home() {
         {/* Stats Bar */}
         {!loading && (
           <div className="bg-card/60 backdrop-blur border-b border-border">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-8">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-4 sm:gap-8">
               <div className="text-center">
-                <span className="text-xl font-extrabold text-primary">{modulesData.length}</span>
-                <p className="text-xs text-muted-foreground">مقياس</p>
+                <span className="text-lg sm:text-xl font-extrabold text-primary">{modulesData.length}</span>
+                <p className="text-[11px] sm:text-xs text-muted-foreground">مقياس</p>
               </div>
-              <div className="w-px h-8 bg-border" />
+              <div className="w-px h-6 sm:h-8 bg-border" />
               <div className="text-center">
-                <span className="text-xl font-extrabold text-primary">{activeModules}</span>
-                <p className="text-xs text-muted-foreground">مقياس نشط</p>
+                <span className="text-lg sm:text-xl font-extrabold text-primary">{activeModules}</span>
+                <p className="text-[11px] sm:text-xs text-muted-foreground">مقياس نشط</p>
               </div>
-              <div className="w-px h-8 bg-border" />
+              <div className="w-px h-6 sm:h-8 bg-border" />
               <div className="text-center">
-                <span className="text-xl font-extrabold text-primary">{totalFiles}</span>
-                <p className="text-xs text-muted-foreground">ملف متاح</p>
+                <span className="text-lg sm:text-xl font-extrabold text-primary">{totalFiles}</span>
+                <p className="text-[11px] sm:text-xs text-muted-foreground">ملف متاح</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Main Content */}
-        <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 w-full">
+        <main className="flex-grow max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-10 w-full">
 
-          {/* Header + Search */}
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">المقاييس الدراسية</h2>
-              <p className="text-muted-foreground mt-1 text-sm">اختر المقياس للوصول إلى الملفات والدروس</p>
-            </div>
-
+          {/* Header */}
+          <div className="mb-5 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground">المقاييس الدراسية</h2>
+            <p className="text-muted-foreground mt-1 text-xs sm:text-sm">اختر المقياس للوصول إلى الملفات والدروس</p>
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <ModuleCardSkeleton key={i} />)
               : modulesData.map((module) => {
@@ -134,7 +131,7 @@ export default function Home() {
                   <Link
                     key={module.id}
                     to={`/module/${module.id}`}
-                    className="group bg-card backdrop-blur-md rounded-xl p-4 shadow-sm border border-border hover:shadow-2xl hover:border-primary/40 transition-all duration-500 ease-out hover:-translate-y-2 relative overflow-hidden"
+                    className="group bg-card backdrop-blur-md rounded-xl p-3 sm:p-4 shadow-sm border border-border active:scale-95 hover:shadow-2xl hover:border-primary/40 transition-all duration-300 ease-out hover:-translate-y-1 relative overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right" />
 
