@@ -1,0 +1,11 @@
+# Cloudflare Pages ignore file
+node_modules/
+.git/
+.github/
+.vscode/
+*.log
+*.md
+!README.md
+cloudflare-worker/
+browser-extension/
+supabase/
