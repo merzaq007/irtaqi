@@ -24,10 +24,11 @@ export default {
     try {
       const result = await syncMoodleFiles(env);
       if (result.totalNewFiles > 0) {
+        const lines = result.syncedFiles.map(f => f.text).join('\n\n');
         await sendTelegramNotification(env, env.TELEGRAM_CHAT_ID,
-          `📚 <b>منصة ارتقي - ملفات جديدة!</b>\n\n` +
-          `تم إضافة <b>${result.totalNewFiles}</b> ملف جديد:\n` +
-          result.syncedFiles.map(f => `• ${f}`).join('\n') +
+          `📚 <b>منصة ارتقي - محاضرات جديدة!</b>\n\n` +
+          `تم نشر <b>${result.totalNewFiles}</b> ملف جديد:\n\n` +
+          lines +
           `\n\n🔗 <a href="${IRTAQI_URL}">افتح المنصة</a>`
         );
       }
@@ -59,10 +60,11 @@ export default {
       try {
         const result = await syncMoodleFiles(env);
         if (result.totalNewFiles > 0) {
+          const lines = result.syncedFiles.map(f => f.text).join('\n\n');
           await sendTelegramNotification(env, env.TELEGRAM_CHAT_ID,
-            `📚 <b>منصة ارتقي - ملفات جديدة!</b>\n\n` +
-            `تم إضافة <b>${result.totalNewFiles}</b> ملف جديد:\n` +
-            result.syncedFiles.map(f => `• ${f}`).join('\n') +
+            `📚 <b>منصة ارتقي - محاضرات جديدة!</b>\n\n` +
+            `تم نشر <b>${result.totalNewFiles}</b> ملف جديد:\n\n` +
+            lines +
             `\n\n🔗 <a href="${IRTAQI_URL}">افتح المنصة</a>`
           );
         }
@@ -133,20 +135,49 @@ async function syncMoodleFiles(env) {
   const courses = await getMoodleCourses(MOODLE_URL, session);
   let totalNewFiles = 0;
   const syncedFiles = [];
+
   for (const course of courses) {
-    // استخدام categoryId للربط المباشر، وإلا الاسم
     const moduleId = CATEGORY_MODULE_MAP[course.categoryId]
       || resolveModuleId(course.fullname || course.shortname || course.displayname || '');
     const files = await getCourseFiles(MOODLE_URL, session, course.id);
+
     for (const file of files) {
       const isNew = await isFileNew(SUPABASE_URL, SUPABASE_KEY, file.url);
       if (isNew) {
         const uploaded = await uploadFileToSupabase(session, { ...file, moduleId }, SUPABASE_URL, SUPABASE_KEY);
-        if (uploaded) { totalNewFiles++; syncedFiles.push(`[${moduleId}] ${file.name}`); }
+        if (uploaded) {
+          totalNewFiles++;
+          // إشعار يتضمن اسم الأستاذ واسم المقياس
+          const moduleName = getModuleName(moduleId);
+          syncedFiles.push({
+            text: `📄 <b>${file.name}</b>\n   📚 المقياس: ${moduleName}\n   👨‍🏫 الأستاذ: ${file.teacher || 'غير محدد'}`,
+            moduleId,
+            fileName: file.name,
+            teacher: file.teacher || 'غير محدد'
+          });
+        }
       }
     }
   }
+
   return { success: true, totalNewFiles, syncedFiles, timestamp: new Date().toISOString() };
+}
+
+function getModuleName(moduleId) {
+  const names = {
+    'web-apps': 'تطبيقات الويب في أنظمة المعلومات الوثائقية',
+    'digital-document': 'الوثيقة الرقمية',
+    'info-engineering': 'هندسة المعلومات',
+    'digital-platforms': 'المنصات الرقمية الوثائقية',
+    'research-methodology': 'منهجية البحث العلمي',
+    'research-data-management': 'إدارة بيانات البحث',
+    'governance-e-reputation': 'الحوكمة والسمعة الإلكترونية',
+    'programming-ai': 'البرمجة والذكاء الاصطناعي',
+    'entrepreneurship': 'المقاولاتية والمؤسسات الناشئة',
+    'social-networks': 'شبكات التواصل الاجتماعي',
+    'english-language': 'اللغة الإنجليزية',
+  };
+  return names[moduleId] || moduleId;
 }
 
 async function loginToMoodle(moodleUrl, username, password) {
@@ -219,6 +250,20 @@ function isAllowedFile(filename) {
 
 async function getCourseFiles(moodleUrl, session, courseId) {
   if (session.type === 'api') {
+    // جلب معلومات المقياس (اسم الأستاذ)
+    let teacherName = 'غير محدد';
+    try {
+      const courseRes = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_course_get_courses&moodlewsrestformat=json&options[ids][0]=${courseId}`);
+      const courseData = await courseRes.json();
+      // جلب المدرسين
+      const enrollRes = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_enrol_get_enrolled_users&moodlewsrestformat=json&courseid=${courseId}`);
+      const enrollData = await enrollRes.json();
+      if (Array.isArray(enrollData)) {
+        const teacher = enrollData.find(u => u.roles?.some(r => r.shortname === 'editingteacher' || r.shortname === 'teacher'));
+        if (teacher) teacherName = teacher.fullname;
+      }
+    } catch(e) {}
+
     const res = await fetch(`${moodleUrl}/webservice/rest/server.php?wstoken=${session.token}&wsfunction=core_course_get_contents&moodlewsrestformat=json&courseid=${courseId}`);
     const contents = await res.json();
     const files = [];
@@ -227,7 +272,7 @@ async function getCourseFiles(moodleUrl, session, courseId) {
         if (mod.modname === 'resource' && mod.contents) {
           for (const f of mod.contents) {
             if (f.type === 'file' && isAllowedFile(f.filename)) {
-              files.push({ name: f.filename, url: f.fileurl + `&token=${session.token}`, size: f.filesize, courseId });
+              files.push({ name: f.filename, url: f.fileurl + `&token=${session.token}`, size: f.filesize, courseId, teacher: teacherName });
             }
           }
         }
@@ -235,15 +280,25 @@ async function getCourseFiles(moodleUrl, session, courseId) {
     }
     return files;
   }
+
+  // web scraping
   const res = await fetch(`${moodleUrl}/course/view.php?id=${courseId}`, { headers: { 'Cookie': session.cookies } });
   const html = await res.text();
+
+  // استخراج اسم الأستاذ من الصفحة
+  let teacherName = 'غير محدد';
+  const teacherMatch = html.match(/class="[^"]*teacher[^"]*"[^>]*>([^<]+)</i) ||
+                       html.match(/Enseignant[^:]*:\s*<[^>]+>([^<]+)</i) ||
+                       html.match(/Enseignant[^:]*:\s*([^\n<]+)/i);
+  if (teacherMatch) teacherName = teacherMatch[1].trim();
+
   const files = [];
   const regex = /pluginfile\.php([^"'\s]+)/g;
   let match;
   while ((match = regex.exec(html)) !== null) {
     const name = decodeURIComponent(match[1].split('/').pop() || 'file');
     if (isAllowedFile(name)) {
-      files.push({ name, url: `${moodleUrl}/pluginfile.php${match[1]}`, size: 0, courseId });
+      files.push({ name, url: `${moodleUrl}/pluginfile.php${match[1]}`, size: 0, courseId, teacher: teacherName });
     }
   }
   return files;
