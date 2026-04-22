@@ -1,0 +1,8 @@
+# Cloudflare Pages Configuration
+# This file tells Cloudflare Pages how to build and deploy
+
+build:
+  command: npm run build
+  output_directory: dist
+  
+# No deploy command needed for Pages
