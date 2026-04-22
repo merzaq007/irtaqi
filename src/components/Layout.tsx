@@ -42,8 +42,8 @@ export function Layout({ children }: LayoutProps) {
                 <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-10 h-10 object-contain drop-shadow-sm" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
-                <span className="text-xs font-semibold text-muted-foreground tracking-wide hidden sm:block">تخصص تكنولوجيا وهندسة المعلومات</span>
+                <span className="text-lg sm:text-xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
+                <span className="text-xs font-semibold text-muted-foreground tracking-wide hidden sm:block">تكنولوجيا وهندسة المعلومات</span>
               </div>
             </NavLink>
 
@@ -76,10 +76,10 @@ export function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center gap-3 text-center">
             <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-primary/20 transition-all hover:scale-110 hover:-translate-y-1">
-                <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-9 h-9 object-contain" />
+            <div className="flex items-center justify-center w-10 h-10 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-primary/20 transition-all hover:scale-110 hover:-translate-y-1">
+                <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-8 h-8 object-contain" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
+              <span className="text-base font-bold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
             </div>
             <p className="text-sm text-muted-foreground">
               منصة ارتقِي - جميع الحقوق محفوظة © 2026
