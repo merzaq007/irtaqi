@@ -13,7 +13,7 @@
   "host_permissions": [
     "https://moodle.univ-tiaret.dz/*",
     "https://bdjhurufqkalicjmokbk.supabase.co/*",
-    "https://irtaqi-1gy.pages.dev/*"
+    "https://irtaqi.pages.dev/*"
   ],
   "background": {
     "service_worker": "background.js"

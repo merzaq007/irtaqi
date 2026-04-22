@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=33988' });
   });
   document.getElementById('openIrtaqiBtn').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://irtaqi-1gy.pages.dev' });
+    chrome.tabs.create({ url: 'https://irtaqi.pages.dev/' });
   });
   document.getElementById('openScannerBtn').addEventListener('click', () => {
     chrome.tabs.create({ url: chrome.runtime.getURL('scanner.html') });
