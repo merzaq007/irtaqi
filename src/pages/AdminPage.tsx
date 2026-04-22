@@ -7,14 +7,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { MODULES } from '@/lib/index';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [selectedModule, setSelectedModule] = useState<string>('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [password, setPassword]               = useState('');
+  const [selectedModule, setSelectedModule]   = useState('');
+  const [selectedFile, setSelectedFile]       = useState<File | null>(null);
+  const [uploading, setUploading]             = useState(false);
+  const [message, setMessage]                 = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const ADMIN_PASSWORD = 'admin123';
 
@@ -30,22 +31,24 @@ export default function AdminPage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
-      if (allowedTypes.includes(file.type)) {
-        setSelectedFile(file);
-        setMessage(null);
-      } else {
-        setMessage({ type: 'error', text: 'نوع الملف غير مدعوم. يرجى اختيار ملف PDF أو Word أو PowerPoint' });
-        setSelectedFile(null);
-      }
+    if (!file) return;
+    const allowed = ['application/pdf','application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+    if (allowed.includes(file.type)) {
+      setSelectedFile(file);
+      setMessage(null);
+    } else {
+      setMessage({ type: 'error', text: 'نوع الملف غير مدعوم. PDF أو Word أو PowerPoint فقط' });
+      setSelectedFile(null);
     }
   };
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedModule || !selectedFile) {
-      setMessage({ type: 'error', text: 'يرجى اختيار المادة والملف' });
+      setMessage({ type: 'error', text: 'يرجى اختيار المقياس والملف' });
       return;
     }
 
@@ -53,15 +56,45 @@ export default function AdminPage() {
     setMessage(null);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setMessage({ type: 'success', text: `تم رفع الملف "${selectedFile.name}" بنجاح` });
+      // 1. رفع الملف إلى Supabase Storage
+      const ext      = selectedFile.name.split('.').pop()?.toLowerCase() || 'file';
+      const path     = `${selectedModule}/${Date.now()}_${selectedFile.name}`;
+
+      const { error: storageError } = await supabase.storage
+        .from('course-files')
+        .upload(path, selectedFile, { upsert: false });
+
+      if (storageError) throw new Error(storageError.message);
+
+      // 2. جلب الرابط العام
+      const { data: urlData } = supabase.storage
+        .from('course-files')
+        .getPublicUrl(path);
+
+      const fileUrl = urlData.publicUrl;
+
+      // 3. حفظ المعلومات في قاعدة البيانات
+      // هذا سيُطلق الـ trigger تلقائياً → Edge Function → إشعار Telegram
+      const { error: dbError } = await supabase
+        .from('files')
+        .insert({
+          file_name:  selectedFile.name,
+          file_url:   fileUrl,
+          file_type:  ext.toUpperCase(),
+          file_size:  selectedFile.size,
+          module_id:  selectedModule,
+        });
+
+      if (dbError) throw new Error(dbError.message);
+
+      setMessage({ type: 'success', text: `✅ تم نشر "${selectedFile.name}" وإرسال إشعار Telegram تلقائياً` });
       setSelectedModule('');
       setSelectedFile(null);
-      const fileInput = document.getElementById('file-input') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-    } catch (error) {
-      setMessage({ type: 'error', text: 'حدث خطأ أثناء رفع الملف. يرجى المحاولة مرة أخرى' });
+      const input = document.getElementById('file-input') as HTMLInputElement;
+      if (input) input.value = '';
+
+    } catch (err: any) {
+      setMessage({ type: 'error', text: `❌ خطأ: ${err.message}` });
     } finally {
       setUploading(false);
     }
@@ -82,25 +115,17 @@ export default function AdminPage() {
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="password">كلمة المرور</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="أدخل كلمة المرور"
-                  className="text-right"
-                  dir="rtl"
-                />
+                <Input id="password" type="password" value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="أدخل كلمة المرور" dir="rtl" />
               </div>
-              {message && message.type === 'error' && (
+              {message?.type === 'error' && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{message.text}</AlertDescription>
                 </Alert>
               )}
-              <Button type="submit" className="w-full">
-                دخول
-              </Button>
+              <Button type="submit" className="w-full">دخول</Button>
             </form>
           </CardContent>
         </Card>
@@ -117,21 +142,21 @@ export default function AdminPage() {
               <FileUp className="w-10 h-10 text-primary" />
             </div>
             <CardTitle className="text-4xl font-bold">رفع ملف جديد</CardTitle>
-            <CardDescription className="text-base mt-3">اختر المقياس والملف لرفعه إلى المنصة</CardDescription>
+            <CardDescription className="text-base mt-3">
+              عند الرفع يُرسل إشعار Telegram تلقائياً لكل الطلاب
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleUpload} className="space-y-8">
               <div className="space-y-3">
                 <Label htmlFor="module" className="text-base font-semibold">المقياس</Label>
                 <Select value={selectedModule} onValueChange={setSelectedModule}>
-                  <SelectTrigger id="module" className="text-right" dir="rtl">
-                    <SelectValue placeholder="اختر المادة" />
+                  <SelectTrigger id="module" dir="rtl">
+                    <SelectValue placeholder="اختر المقياس" />
                   </SelectTrigger>
                   <SelectContent>
-                    {MODULES.map((module) => (
-                      <SelectItem key={module.id} value={module.id}>
-                        {module.name}
-                      </SelectItem>
+                    {MODULES.map(m => (
+                      <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -139,50 +164,31 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 <Label htmlFor="file-input" className="text-base font-semibold">الملف</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="file-input"
-                    type="file"
-                    onChange={handleFileChange}
-                    accept=".pdf,.doc,.docx,.ppt,.pptx"
-                    className="text-right"
-                    dir="rtl"
-                  />
-                </div>
+                <Input id="file-input" type="file"
+                  onChange={handleFileChange}
+                  accept=".pdf,.doc,.docx,.ppt,.pptx" dir="rtl" />
                 {selectedFile && (
-                  <p className="text-sm text-muted-foreground text-right">
-                    الملف المحدد: {selectedFile.name}
+                  <p className="text-sm text-muted-foreground">
+                    الملف: {selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)
                   </p>
                 )}
               </div>
 
               {message && (
                 <Alert variant={message.type === 'success' ? 'default' : 'destructive'}>
-                  {message.type === 'success' ? (
-                    <CheckCircle className="h-4 w-4" />
-                  ) : (
-                    <AlertCircle className="h-4 w-4" />
-                  )}
+                  {message.type === 'success'
+                    ? <CheckCircle className="h-4 w-4" />
+                    : <AlertCircle className="h-4 w-4" />}
                   <AlertDescription>{message.text}</AlertDescription>
                 </Alert>
               )}
 
-              <Button
-                type="submit"
-                className="w-full text-base py-6"
-                disabled={uploading || !selectedModule || !selectedFile}
-                size="lg"
-              >
+              <Button type="submit" className="w-full text-base py-6" size="lg"
+                disabled={uploading || !selectedModule || !selectedFile}>
                 {uploading ? (
-                  <>
-                    <span className="animate-spin mr-2">⏳</span>
-                    جاري الرفع...
-                  </>
+                  <><span className="animate-spin mr-2">⏳</span>جاري الرفع والإشعار...</>
                 ) : (
-                  <>
-                    <Upload className="ml-2 h-4 w-4" />
-                    رفع الملف
-                  </>
+                  <><Upload className="ml-2 h-4 w-4" />نشر الدرس + إشعار Telegram</>
                 )}
               </Button>
             </form>
