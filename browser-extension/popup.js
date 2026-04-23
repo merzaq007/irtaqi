@@ -121,6 +121,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.tabs.create({ url: 'https://moodle.univ-tiaret.dz/course/index.php?categoryid=29773' });
   });
 
+  // ===== مسح شامل =====
+  document.getElementById('fullScanBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('fullScanBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ جاري المسح...';
+    showStatus('main', '🔍 يتم فتح كل المقاييس ومسحها تلقائياً...', 'info');
+    showProgress(10);
+
+    const result = await chrome.runtime.sendMessage({ type: 'FULL_SCAN' });
+
+    hideProgress();
+    btn.disabled = false;
+    btn.textContent = '🔍 مسح شامل لكل المقاييس';
+
+    if (result?.error === 'no_key') {
+      showStatus('main', '❌ أدخل Supabase Key في الإعدادات أولاً', 'error');
+    } else if (result?.totalSynced > 0) {
+      showStatus('main', `✅ تم رفع ${result.totalSynced} ملف جديد من ${result.results?.length} مقياس`, 'ok');
+    } else {
+      showStatus('main', 'ℹ️ كل الملفات موجودة مسبقاً أو لا توجد ملفات جديدة', 'info');
+    }
+  });
+
   // ===== حفظ الإعدادات =====
   document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
     const key     = document.getElementById('supabaseKey').value.trim();

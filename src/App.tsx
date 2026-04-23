@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import ModulePage from './pages/ModulePage';
 import TeacherPage from './pages/TeacherPage';
 import MoodleSettingsPage from './pages/MoodleSettingsPage';
+import PushNotificationBanner from './components/PushNotificationBanner';
 import { ROUTE_PATHS } from './lib/index';
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/teacher" element={<TeacherPage />} />
           <Route path="/moodle-settings" element={<MoodleSettingsPage />} />
         </Routes>
+        <PushNotificationBanner />
       </Router>
     </ThemeProvider>
   );
