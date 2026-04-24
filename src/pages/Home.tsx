@@ -82,14 +82,16 @@ export default function Home() {
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse shrink-0" />
               <span className="text-white/90 text-xs sm:text-sm font-medium">جامعة ابن خلدون تيارت - السنة أولى ماستر</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold mb-3 tracking-tight text-white drop-shadow-lg">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 tracking-tight text-white drop-shadow-lg">
               منصة ارتقِي
             </h1>
-            <p className="text-sm sm:text-xl text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
-              المنصة الأكاديمية لطلبة السنة أولى ماستر<br className="block sm:hidden" /><span className="hidden sm:inline"> — </span>
-              <span className="block sm:inline">تخصص تكنولوجيا وهندسة المعلومات</span>
+            <p className="text-base sm:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
+              المنصة الأكاديمية لطلبة السنة أولى ماستر
             </p>
-            <p className="text-xs sm:text-sm text-white/60 mt-2 font-medium">
+            <p className="text-base sm:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
+              تخصص تكنولوجيا وهندسة المعلومات
+            </p>
+            <p className="text-sm sm:text-base text-white/60 mt-2 font-medium">
               حيث يَسهُل الوصول إلى المحاضرات
             </p>
           </div>
