@@ -100,13 +100,13 @@ export default function Home() {
             </div>
 
             {/* زر CTA */}
-            <a
-              href="#modules"
+            <button
+              onClick={() => document.getElementById('modules')?.scrollIntoView({ behavior: 'smooth' })}
               className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 text-sm sm:text-base"
             >
               تصفح المقاييس
               <span className="text-lg">↓</span>
-            </a>
+            </button>
           </div>
         </header>
 
