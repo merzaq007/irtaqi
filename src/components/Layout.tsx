@@ -79,7 +79,7 @@ export function Layout({ children }: LayoutProps) {
             <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-primary/20 transition-all hover:scale-110 hover:-translate-y-1">
                 <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-9 h-9 object-contain" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
+              <span className="text-xl font-bold text-primary">منصة ارتقِي</span>
             </div>
             <p className="text-sm text-muted-foreground">
               منصة ارتقِي - جميع الحقوق محفوظة © 2026
