@@ -1,7 +1,7 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { modulesData } from '../data/modules';
-import { FileText, File as FileIcon, ArrowRight, Download, Calendar, HardDrive, Eye } from 'lucide-react';
+import { FileText, File as FileIcon, ArrowRight, Download, Calendar, HardDrive, Eye, Copy, Check } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { supabase, DBFile } from '@/lib/supabase';
 
@@ -26,6 +26,13 @@ export default function ModulePage() {
   const [files, setFiles] = useState<DBFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('الكل');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyLink = (file: DBFile) => {
+    navigator.clipboard.writeText(file.file_url);
+    setCopiedId(file.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const module = modulesData.find(m => m.id === moduleId);
 
@@ -194,6 +201,13 @@ export default function ModulePage() {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={() => copyLink(file)}
+                      title="نسخ الرابط"
+                      className="flex items-center justify-center gap-1.5 bg-card border border-border hover:border-primary/40 hover:text-primary text-muted-foreground px-3 py-2 sm:py-2.5 rounded-lg font-bold text-sm transition-all duration-300"
+                    >
+                      {copiedId === file.id ? <Check size={15} className="text-green-500" /> : <Copy size={15} />}
+                    </button>
                     <a
                       href={file.file_url}
                       target="_blank"

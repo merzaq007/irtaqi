@@ -86,7 +86,11 @@ export default function Home() {
               منصة ارتقِي
             </h1>
             <p className="text-sm sm:text-xl text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
-              المنصة الأكاديمية لطلبة السنة أولى ماستر — تخصص تكنولوجيا وهندسة المعلومات
+              المنصة الأكاديمية لطلبة السنة أولى ماستر<br className="block sm:hidden" /><span className="hidden sm:inline"> — </span>
+              <span className="block sm:inline">تخصص تكنولوجيا وهندسة المعلومات</span>
+            </p>
+            <p className="text-xs sm:text-sm text-white/60 mt-2 font-medium">
+              حيث يَسهُل الوصول إلى المحاضرات
             </p>
           </div>
         </header>
