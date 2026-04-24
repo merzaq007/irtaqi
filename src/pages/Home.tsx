@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { modulesData } from '../data/modules';
 import {
   Globe, FileText, Network, Server, BookOpen, Database,
-  Shield, Bot, Rocket, Share2, Languages, ChevronLeft, Sparkles
+  Shield, Bot, Rocket, Share2, Languages, ChevronLeft
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { AnimatedCard } from '../components/AnimatedCard';
@@ -60,16 +60,8 @@ export default function Home() {
   const [fileCounts, setFileCounts] = useState<Record<string, number>>({});
   const [recentModules, setRecentModules] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-  const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
-    // رسالة ترحيبية حسب الوقت
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) setGreeting('صباح الخير 🌅');
-    else if (hour >= 12 && hour < 17) setGreeting('مساء النور 🌤️');
-    else if (hour >= 17 && hour < 21) setGreeting('مساء الخير 🌆');
-    else setGreeting('مساء الخير 🌙');
-
     const fetchCounts = async () => {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -110,13 +102,13 @@ export default function Home() {
             <div className="relative z-10 max-w-7xl mx-auto px-8 xl:px-16 w-full py-20">
               <div className="max-w-3xl">
 
-                {/* رسالة ترحيبية */}
+                {/* Badge */}
                 <div
                   className="inline-flex items-center gap-2 bg-white/8 backdrop-blur border border-white/12 rounded-full px-4 py-1.5 mb-6"
                   style={{opacity:1,animation:'fadeInDown 0.6s ease both'}}
                 >
-                  <Sparkles size={12} className="text-yellow-400" />
-                  <span className="text-white/70 text-xs font-medium">{greeting} — جامعة ابن خلدون تيارت</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                  <span className="text-white/70 text-xs font-medium tracking-wide">جامعة ابن خلدون تيارت — السنة أولى ماستر</span>
                 </div>
 
                 {/* العنوان */}
@@ -252,8 +244,8 @@ export default function Home() {
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center py-14 sm:py-20">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/15 rounded-full px-4 py-1.5 mb-5">
-                <Sparkles size={11} className="text-yellow-400" />
-                <span className="text-white/75 text-xs font-medium">{greeting}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                <span className="text-white/75 text-xs font-medium">جامعة ابن خلدون تيارت</span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white leading-tight">
                 كل محاضراتك في مكان واحد
