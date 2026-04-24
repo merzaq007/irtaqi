@@ -42,7 +42,7 @@ export function Layout({ children }: LayoutProps) {
                 <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-10 h-10 object-contain drop-shadow-sm" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">منصة ارتقِي</span>
+                <span className="text-2xl font-extrabold text-primary">منصة ارتقِي</span>
                 <span className="text-xs font-semibold text-muted-foreground tracking-wide hidden sm:block">تخصص تكنولوجيا وهندسة المعلومات</span>
               </div>
             </NavLink>

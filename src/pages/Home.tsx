@@ -90,8 +90,7 @@ export default function Home() {
             </div>
 
             {/* العنوان */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight drop-shadow-lg"
-              style={{background: 'linear-gradient(135deg, #fff 0%, oklch(0.75 0.14 255) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight text-white drop-shadow-lg">
               منصة ارتقِي
             </h1>
 
