@@ -39,7 +39,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex h-16 items-center justify-between">
             <NavLink to={ROUTE_PATHS.HOME} className="flex items-center gap-3">
               <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-primary/20 transition-transform duration-300 hover:scale-105 hover:rotate-3">
-                <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-10 h-10 object-contain drop-shadow-sm" />
+                <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-10 h-10 object-contain drop-shadow-sm" loading="lazy" />
               </div>
               <div className="flex flex-col">
                 <span className="text-2xl font-extrabold text-primary">منصة ارتقِي</span>
