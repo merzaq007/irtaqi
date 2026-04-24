@@ -74,79 +74,100 @@ export default function Home() {
     <Layout>
       <div className="flex flex-col">
 
-        {/* ===== DESKTOP: Hero + Modules side by side ===== */}
-        <div className="hidden lg:flex min-h-screen relative">
+        {/* ===== DESKTOP: تصميم احترافي كامل ===== */}
+        <div className="hidden lg:block">
 
-          {/* خلفية كاملة للـ desktop */}
-          <div className="absolute inset-0 bg-[oklch(0.12_0.06_255)]" />
-          <div className="absolute top-[-100px] left-[30%] w-[500px] h-[500px] rounded-full bg-[oklch(0.40_0.14_255)]/20 blur-[100px]" />
-          <div className="absolute bottom-[-80px] right-[-80px] w-[400px] h-[400px] rounded-full bg-[oklch(0.55_0.18_200)]/15 blur-[80px]" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(oklch(1 0 0) 1px, transparent 1px), linear-gradient(90deg, oklch(1 0 0) 1px, transparent 1px)', backgroundSize: '50px 50px'}} />
+          {/* Hero - كامل العرض */}
+          <header className="relative overflow-hidden min-h-[520px] flex items-center">
+            {/* خلفية */}
+            <div className="absolute inset-0 bg-[oklch(0.10_0.05_255)]" />
+            <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-[oklch(0.42_0.16_255)]/15 blur-[120px] -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[oklch(0.55_0.18_200)]/10 blur-[100px] translate-y-1/3" />
+            <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(oklch(1 0 0) 1px, transparent 1px), linear-gradient(90deg, oklch(1 0 0) 1px, transparent 1px)', backgroundSize: '60px 60px'}} />
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
-          {/* Hero - يسار */}
-          <div className="relative z-10 w-[420px] xl:w-[480px] shrink-0 flex flex-col justify-center px-10 xl:px-14 py-16 sticky top-0 h-screen">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-4 py-1.5 mb-8 w-fit">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
-              <span className="text-white/80 text-xs font-medium">جامعة ابن خلدون تيارت</span>
-            </div>
-
-            <h1 className="text-5xl xl:text-6xl font-extrabold mb-6 tracking-tight text-white leading-tight">
-              منصة ارتقِي
-            </h1>
-
-            <div className="flex flex-col gap-2 mb-8">
-              <p className="text-sm text-white/70 font-medium">المنصة الأكاديمية لطلبة السنة أولى ماستر</p>
-              <p className="text-sm text-white/70 font-medium">تخصص تكنولوجيا وهندسة المعلومات</p>
-              <p className="text-xs text-white/40 font-medium mt-1">حيث يَسهُل الوصول إلى المحاضرات</p>
-            </div>
-
-            {/* Stats */}
-            {!loading && (
-              <div className="flex items-center gap-6 mb-8">
-                <div>
-                  <span className="text-2xl font-extrabold text-white">{modulesData.length}</span>
-                  <p className="text-xs text-white/40">مقياس</p>
+            <div className="relative z-10 max-w-7xl mx-auto px-8 xl:px-16 w-full py-20">
+              <div className="max-w-3xl">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 bg-white/8 backdrop-blur border border-white/12 rounded-full px-4 py-1.5 mb-8">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                  <span className="text-white/70 text-xs font-medium tracking-wide">جامعة ابن خلدون تيارت — السنة أولى ماستر</span>
                 </div>
-                <div className="w-px h-8 bg-white/10" />
-                <div>
-                  <span className="text-2xl font-extrabold text-white">{activeModules}</span>
-                  <p className="text-xs text-white/40">مقياس نشط</p>
-                </div>
-                <div className="w-px h-8 bg-white/10" />
-                <div>
-                  <span className="text-2xl font-extrabold text-white">{totalFiles}</span>
-                  <p className="text-xs text-white/40">ملف متاح</p>
+
+                {/* العنوان الرئيسي */}
+                <h1 className="text-6xl xl:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
+                  منصة{' '}
+                  <span className="relative inline-block">
+                    <span className="relative z-10">ارتقِي</span>
+                    <span className="absolute inset-x-0 bottom-1 h-3 bg-[oklch(0.42_0.16_255)]/40 rounded-sm -z-0" />
+                  </span>
+                </h1>
+
+                {/* الوصف */}
+                <p className="text-lg text-white/55 font-medium mb-2 leading-relaxed">
+                  المنصة الأكاديمية لطلبة تخصص تكنولوجيا وهندسة المعلومات
+                </p>
+                <p className="text-sm text-white/35 mb-10">
+                  حيث يَسهُل الوصول إلى المحاضرات
+                </p>
+
+                {/* Stats + CTA */}
+                <div className="flex items-center gap-8">
+                  <button
+                    onClick={() => document.getElementById('desktop-modules')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="inline-flex items-center gap-2 font-bold px-8 py-3.5 rounded-xl text-white text-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
+                    style={{background: 'linear-gradient(135deg, oklch(0.42_0.16_255), oklch(0.52_0.18_220))', boxShadow: '0 4px 20px oklch(0.42 0.16 255 / 0.35)'}}
+                  >
+                    تصفح المقاييس
+                    <ChevronLeft size={16} className="rotate-90" />
+                  </button>
+
+                  {!loading && (
+                    <div className="flex items-center gap-6">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white">{modulesData.length}</div>
+                        <div className="text-xs text-white/35 mt-0.5">مقياس</div>
+                      </div>
+                      <div className="w-px h-8 bg-white/10" />
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white">{totalFiles}</div>
+                        <div className="text-xs text-white/35 mt-0.5">ملف متاح</div>
+                      </div>
+                      <div className="w-px h-8 bg-white/10" />
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white">{activeModules}</div>
+                        <div className="text-xs text-white/35 mt-0.5">مقياس نشط</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            )}
-
-            <button
-              onClick={() => document.querySelector('.desktop-modules')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full transition-all duration-300 hover:-translate-y-0.5 text-sm text-white w-fit"
-              style={{background: 'linear-gradient(135deg, oklch(0.40_0.14_255), oklch(0.55_0.18_200))', boxShadow: '0 4px 24px oklch(0.40 0.14 255 / 0.4)'}}
-            >
-              تصفح المقاييس ↓
-            </button>
-          </div>
-
-          {/* فاصل */}
-          <div className="relative z-10 w-px bg-white/5 shrink-0" />
-
-          {/* المقاييس - يمين */}
-          <div className="relative z-10 flex-1 overflow-y-auto py-8 px-6 xl:px-10 desktop-modules" style={{maxHeight: '100vh'}}>
-            <div className="mb-6">
-              <h2 className="text-lg font-bold text-white/80">المقاييس الدراسية</h2>
-              <p className="text-white/40 text-xs mt-1">اختر المقياس للوصول إلى الملفات</p>
             </div>
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+          </header>
+
+          {/* المقاييس - Grid 3 أعمدة */}
+          <main className="max-w-7xl mx-auto px-8 xl:px-16 py-16" id="desktop-modules">
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">المقاييس الدراسية</h2>
+                <p className="text-muted-foreground text-sm mt-1">اختر المقياس للوصول إلى الملفات والدروس</p>
+              </div>
+              {!loading && (
+                <span className="text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full font-medium">
+                  {modulesData.length} مقياس
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
               {loading
-                ? Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/10 animate-pulse">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-white/10 shrink-0" />
-                      <div className="flex-grow">
-                        <div className="h-3 bg-white/10 rounded w-3/4 mb-2" />
-                        <div className="h-2 bg-white/10 rounded w-1/4" />
+                ? Array.from({ length: 9 }).map((_, i) => (
+                  <div key={i} className="bg-card rounded-2xl p-5 border border-border animate-pulse">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-11 h-11 rounded-xl bg-muted shrink-0" />
+                      <div className="flex-1">
+                        <div className="h-3.5 bg-muted rounded w-4/5 mb-2" />
+                        <div className="h-2.5 bg-muted rounded w-2/5" />
                       </div>
                     </div>
                   </div>
@@ -158,37 +179,43 @@ export default function Home() {
                     <Link
                       key={module.id}
                       to={`/module/${module.id}`}
-                      className="group bg-white/5 hover:bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/10 hover:border-white/25 transition-all duration-300 hover:-translate-y-0.5 relative overflow-hidden"
+                      className="group bg-card rounded-2xl p-5 border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
                     >
-                      <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-primary to-accent transform scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:text-white shrink-0 ${module.color}`}>
+                      {/* خط علوي ملون */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary to-primary/0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+
+                      <div className="flex items-start gap-3 mb-4">
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 ${module.color}`}>
                           {iconMap[module.icon]}
                         </div>
-                        <div className="flex-grow min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="text-xs font-bold text-white/80 group-hover:text-white transition-colors truncate leading-snug">
-                              {module.title}
-                            </h3>
-                            {recentModules.has(module.id) && (
-                              <span className="shrink-0 text-[9px] font-bold bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full">جديد</span>
-                            )}
-                          </div>
-                          <div className="mt-1">
-                            {hasFiles
-                              ? <span className="text-[10px] font-semibold text-primary/80">{count} ملف</span>
-                              : <span className="text-[10px] text-white/30">لا توجد ملفات</span>
-                            }
-                          </div>
+                        <div className="flex-1 min-w-0 pt-0.5">
+                          <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                            {module.title}
+                          </h3>
                         </div>
-                        <ChevronLeft size={14} className="text-white/30 group-hover:text-white/70 transition-colors shrink-0" />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        {hasFiles ? (
+                          <span className="text-xs font-semibold bg-primary/8 text-primary px-2.5 py-1 rounded-lg">
+                            {count} ملف متاح
+                          </span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">لا توجد ملفات بعد</span>
+                        )}
+                        <div className="flex items-center gap-1.5">
+                          {recentModules.has(module.id) && (
+                            <span className="text-[9px] font-bold bg-green-500/10 text-green-600 px-2 py-0.5 rounded-full border border-green-500/20">جديد</span>
+                          )}
+                          <ChevronLeft size={14} className="text-muted-foreground/40 group-hover:text-primary transition-colors" />
+                        </div>
                       </div>
                     </Link>
                   );
                 })
               }
             </div>
-          </div>
+          </main>
         </div>
 
         {/* ===== MOBILE/TABLET: الهيكل الأصلي ===== */}
