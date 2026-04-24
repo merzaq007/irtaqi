@@ -110,16 +110,16 @@ export default function ModulePage() {
         <main className="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full relative z-10">
 
           {/* Module Header */}
-          <div className="mb-6 bg-card/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-border">
-            <h1 className="text-2xl sm:text-3xl font-extrabold mb-2 leading-normal bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
+          <div className="mb-6 bg-card rounded-2xl p-6 shadow-sm border border-border">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-2 leading-snug">
               {module.title}
             </h1>
             <div className="flex items-center gap-3 flex-wrap">
-              <p className="text-muted-foreground text-sm font-medium">
-                تصفح وحمل جميع الملفات والمحاضرات الخاصة بهذا المقياس.
+              <p className="text-muted-foreground text-sm">
+                تصفح وحمّل جميع الملفات والمحاضرات الخاصة بهذا المقياس.
               </p>
               {!loading && (
-                <span className="bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
+                <span className="bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full">
                   {files.length} ملف
                 </span>
               )}
@@ -176,7 +176,7 @@ export default function ModulePage() {
                       {getFileIcon(file.file_type)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-base sm:text-lg font-bold text-card-foreground mb-1 sm:mb-1.5 group-hover:text-primary transition-colors truncate">
+                      <h3 className="text-sm sm:text-base font-semibold text-foreground mb-1 sm:mb-1.5 group-hover:text-primary transition-colors truncate">
                         {file.file_name}
                       </h3>
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs text-muted-foreground font-semibold">

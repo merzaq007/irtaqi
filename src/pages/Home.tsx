@@ -179,17 +179,17 @@ export default function Home() {
                     <Link
                       key={module.id}
                       to={`/module/${module.id}`}
-                      className="group bg-card rounded-2xl p-5 border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
+                      className="group bg-card rounded-2xl p-5 border border-border hover:border-primary/30 hover:shadow-xl hover:bg-primary/[0.02] transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
                     >
                       {/* خط علوي ملون */}
                       <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary to-primary/0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
 
                       <div className="flex items-start gap-3 mb-4">
-                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-110 ${module.color}`}>
+                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover:scale-105 ${module.color}`}>
                           {iconMap[module.icon]}
                         </div>
                         <div className="flex-1 min-w-0 pt-0.5">
-                          <h3 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                          <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
                             {module.title}
                           </h3>
                         </div>
