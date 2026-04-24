@@ -67,34 +67,43 @@ export default function Home() {
     <Layout>
       <div className="flex flex-col">
         {/* Hero Section */}
-        <header className="relative overflow-hidden min-h-[300px] sm:min-h-[460px] flex items-center justify-center">
-          {/* Background gradient بدل الصورة المحذوفة */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900" />
-          {/* نقاط زخرفية */}
-          <div className="absolute inset-0 opacity-20" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}} />
+        <header className="relative overflow-hidden min-h-[320px] sm:min-h-[480px] flex items-center justify-center">
+          {/* خلفية متدرجة أكاديمية */}
+          <div className="absolute inset-0 bg-[oklch(0.12_0.06_255)]" />
+
+          {/* دوائر ضوئية */}
+          <div className="absolute top-[-80px] right-[-80px] w-[400px] h-[400px] rounded-full bg-[oklch(0.40_0.14_255)]/20 blur-[80px]" />
+          <div className="absolute bottom-[-60px] left-[-60px] w-[350px] h-[350px] rounded-full bg-[oklch(0.55_0.18_200)]/15 blur-[70px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] rounded-full bg-[oklch(0.40_0.14_255)]/10 blur-[60px]" />
+
+          {/* شبكة خفيفة */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{backgroundImage: 'linear-gradient(oklch(1 0 0) 1px, transparent 1px), linear-gradient(90deg, oklch(1 0 0) 1px, transparent 1px)', backgroundSize: '50px 50px'}} />
+
+          {/* تدرج سفلي للانتقال */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
 
-          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-24">
+          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-14 sm:py-28">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 rounded-full px-4 py-1.5 mb-6">
               <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
-              <span className="text-white/90 text-xs sm:text-sm font-medium">جامعة ابن خلدون تيارت</span>
+              <span className="text-white/80 text-xs sm:text-sm font-medium">جامعة ابن خلدون تيارت</span>
             </div>
 
             {/* العنوان */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight text-white drop-shadow-lg">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-5 tracking-tight drop-shadow-lg"
+              style={{background: 'linear-gradient(135deg, #fff 0%, oklch(0.75 0.14 255) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
               منصة ارتقِي
             </h1>
 
-            {/* الوصف - سطر تحت سطر */}
-            <div className="flex flex-col items-center gap-1 mb-6">
-              <p className="text-sm sm:text-base text-white/75 font-medium">
+            {/* الوصف */}
+            <div className="flex flex-col items-center gap-1.5 mb-8">
+              <p className="text-sm sm:text-base text-white/70 font-medium">
                 المنصة الأكاديمية لطلبة السنة أولى ماستر
               </p>
-              <p className="text-sm sm:text-base text-white/75 font-medium">
+              <p className="text-sm sm:text-base text-white/70 font-medium">
                 تخصص تكنولوجيا وهندسة المعلومات
               </p>
-              <p className="text-xs sm:text-sm text-white/50 mt-1 font-medium">
+              <p className="text-xs sm:text-sm text-white/40 mt-1 font-medium">
                 حيث يَسهُل الوصول إلى المحاضرات
               </p>
             </div>
@@ -102,10 +111,11 @@ export default function Home() {
             {/* زر CTA */}
             <button
               onClick={() => document.getElementById('modules')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 text-sm sm:text-base"
+              className="inline-flex items-center gap-2 font-bold px-7 py-3 rounded-full transition-all duration-300 shadow-lg hover:-translate-y-0.5 text-sm sm:text-base text-white"
+              style={{background: 'linear-gradient(135deg, oklch(0.40_0.14_255), oklch(0.55_0.18_200))', boxShadow: '0 4px 24px oklch(0.40 0.14 255 / 0.4)'}}
             >
               تصفح المقاييس
-              <span className="text-lg">↓</span>
+              <span>↓</span>
             </button>
           </div>
         </header>
