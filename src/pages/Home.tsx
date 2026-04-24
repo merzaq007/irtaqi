@@ -67,33 +67,46 @@ export default function Home() {
     <Layout>
       <div className="flex flex-col">
         {/* Hero Section */}
-        <header className="relative overflow-hidden min-h-[260px] sm:min-h-[420px] flex items-center justify-center">
-          <div className="absolute inset-0">
-            <img
-              src="/library.png"
-              alt="مكتبة جامعية"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
-          </div>
+        <header className="relative overflow-hidden min-h-[300px] sm:min-h-[460px] flex items-center justify-center">
+          {/* Background gradient بدل الصورة المحذوفة */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900" />
+          {/* نقاط زخرفية */}
+          <div className="absolute inset-0 opacity-20" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}} />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
 
-          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-10 sm:py-24">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 mb-4">
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse shrink-0" />
-              <span className="text-white/90 text-xs sm:text-sm font-medium">جامعة ابن خلدون تيارت - السنة أولى ماستر</span>
+          <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12 sm:py-24">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 sm:px-4 sm:py-1.5 mb-6">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
+              <span className="text-white/90 text-xs sm:text-sm font-medium">جامعة ابن خلدون تيارت</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3 tracking-tight text-white drop-shadow-lg">
+
+            {/* العنوان */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight text-white drop-shadow-lg">
               منصة ارتقِي
             </h1>
-            <p className="text-base sm:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
-              المنصة الأكاديمية لطلبة السنة أولى ماستر
-            </p>
-            <p className="text-base sm:text-lg text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">
-              تخصص تكنولوجيا وهندسة المعلومات
-            </p>
-            <p className="text-sm sm:text-base text-white/60 mt-2 font-medium">
-              حيث يَسهُل الوصول إلى المحاضرات
-            </p>
+
+            {/* الوصف - سطر تحت سطر */}
+            <div className="flex flex-col items-center gap-1 mb-6">
+              <p className="text-sm sm:text-base text-white/75 font-medium">
+                المنصة الأكاديمية لطلبة السنة أولى ماستر
+              </p>
+              <p className="text-sm sm:text-base text-white/75 font-medium">
+                تخصص تكنولوجيا وهندسة المعلومات
+              </p>
+              <p className="text-xs sm:text-sm text-white/50 mt-1 font-medium">
+                حيث يَسهُل الوصول إلى المحاضرات
+              </p>
+            </div>
+
+            {/* زر CTA */}
+            <a
+              href="#modules"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 text-sm sm:text-base"
+            >
+              تصفح المقاييس
+              <span className="text-lg">↓</span>
+            </a>
           </div>
         </header>
 
@@ -123,7 +136,7 @@ export default function Home() {
         <main className="flex-grow max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-16 pt-6 sm:pt-10 w-full">
 
           {/* Header */}
-          <div className="mb-5 sm:mb-8">
+          <div className="mb-5 sm:mb-8" id="modules">
             <h2 className="text-xl sm:text-2xl font-bold text-foreground">المقاييس الدراسية</h2>
             <p className="text-muted-foreground mt-1 text-xs sm:text-sm">اختر المقياس للوصول إلى الملفات والدروس</p>
           </div>
