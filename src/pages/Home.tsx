@@ -68,7 +68,7 @@ export default function Home() {
     if (hour >= 5 && hour < 12) setGreeting('صباح الخير 🌅');
     else if (hour >= 12 && hour < 17) setGreeting('مساء النور 🌤️');
     else if (hour >= 17 && hour < 21) setGreeting('مساء الخير 🌆');
-    else setGreeting('أهلاً بك 🌙');
+    else setGreeting('مساء الخير 🌙');
 
     const fetchCounts = async () => {
       const sevenDaysAgo = new Date();
