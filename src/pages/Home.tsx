@@ -25,14 +25,14 @@ const iconMap: Record<string, React.ReactNode> = {
 // Skeleton card component
 function ModuleCardSkeleton() {
   return (
-    <div className="bg-card rounded-xl p-4 sm:p-5 border border-border animate-pulse">
-      <div className="flex items-center gap-4">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-muted shrink-0" />
+    <div className="bg-card rounded-xl p-3 sm:p-4 border border-border animate-pulse">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-xl bg-muted shrink-0" />
         <div className="flex-grow">
-          <div className="h-5 sm:h-6 bg-muted rounded w-3/4 mb-3" />
-          <div className="h-3 bg-muted rounded w-1/2" />
+          <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+          <div className="h-3 bg-muted rounded w-1/4" />
         </div>
-        <div className="w-6 h-6 rounded bg-muted shrink-0" />
+        <div className="w-5 h-5 rounded bg-muted shrink-0" />
       </div>
     </div>
   );
@@ -40,20 +40,27 @@ function ModuleCardSkeleton() {
 
 export default function Home() {
   const [fileCounts, setFileCounts] = useState<Record<string, number>>({});
+  const [recentModules, setRecentModules] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCounts = async () => {
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
       const { data, error } = await supabase
         .from('files')
-        .select('module_id');
+        .select('module_id, upload_date');
 
       if (!error && data) {
         const counts: Record<string, number> = {};
-        data.forEach((row: { module_id: string }) => {
+        const recent = new Set<string>();
+        data.forEach((row: { module_id: string; upload_date: string }) => {
           counts[row.module_id] = (counts[row.module_id] || 0) + 1;
+          if (new Date(row.upload_date) >= sevenDaysAgo) recent.add(row.module_id);
         });
         setFileCounts(counts);
+        setRecentModules(recent);
       }
       setLoading(false);
     };
@@ -161,44 +168,44 @@ export default function Home() {
                   <Link
                     key={module.id}
                     to={`/module/${module.id}`}
-                    className="group bg-card backdrop-blur-md rounded-xl p-4 sm:p-5 shadow-sm border border-border active:scale-[0.98] hover:shadow-2xl hover:border-primary/40 transition-all duration-300 ease-out hover:-translate-y-1 relative overflow-hidden"
+                    className="group bg-card backdrop-blur-md rounded-xl p-3 sm:p-4 shadow-sm border border-border active:scale-[0.98] hover:shadow-2xl hover:border-primary/40 transition-all duration-300 ease-out hover:-translate-y-1 relative overflow-hidden"
                   >
                     <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right" />
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       {/* Icon */}
-                      <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center transition-all duration-500 shadow-inner group-hover:text-white shrink-0 ${module.color}`}>
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 shadow-inner group-hover:text-white shrink-0 ${module.color}`}>
                         {iconMap[module.icon]}
                       </div>
 
                       {/* Content */}
                       <div className="flex-grow min-w-0">
-                        <h2 className="text-lg sm:text-xl font-bold text-card-foreground mb-2 leading-snug group-hover:text-primary transition-colors duration-300">
-                          {module.title}
-                        </h2>
-
-                        {/* Progress bar */}
-                        <div>
-                          <div className="flex items-center justify-between mb-1.5">
-                            <span className="text-xs sm:text-sm text-muted-foreground font-semibold">
-                              {hasFiles ? `${count} ملفات متاحة` : 'لا توجد ملفات بعد'}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h2 className="text-sm sm:text-base font-bold text-card-foreground leading-snug group-hover:text-primary transition-colors duration-300 truncate">
+                            {module.title}
+                          </h2>
+                          {recentModules.has(module.id) && (
+                            <span className="shrink-0 text-[10px] font-bold bg-green-500/15 text-green-600 px-2 py-0.5 rounded-full border border-green-500/20">
+                              جديد
                             </span>
-                            {hasFiles && (
-                              <span className="text-xs sm:text-sm font-bold text-primary">{count}</span>
-                            )}
-                          </div>
-                          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-700"
-                              style={{ width: hasFiles ? `${Math.min((count / 10) * 100, 100)}%` : '0%' }}
-                            />
-                          </div>
+                          )}
+                        </div>
+
+                        {/* Badge عدد الملفات */}
+                        <div className="mt-1.5">
+                          {hasFiles ? (
+                            <span className="inline-flex items-center gap-1 text-xs font-semibold bg-primary/10 text-primary px-2.5 py-0.5 rounded-full">
+                              {count} ملف متاح
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground font-medium">لا توجد ملفات بعد</span>
+                          )}
                         </div>
                       </div>
 
                       {/* Arrow */}
                       <div className="text-muted-foreground group-hover:text-primary transition-colors duration-500 shrink-0">
-                        <ChevronLeft size={24} strokeWidth={2.5} />
+                        <ChevronLeft size={20} strokeWidth={2.5} />
                       </div>
                     </div>
                   </Link>
