@@ -40,9 +40,9 @@
 */
 
 :root {
-  /* Typography - Cairo للعناوين، Noto Sans Arabic للنصوص */
-  --font-sans: "Noto Sans Arabic", "Cairo", -apple-system, system-ui, sans-serif;
-  --font-heading: "Cairo", "Noto Sans Arabic", system-ui, sans-serif;
+  /* Typography - Tajawal خط عربي فخم */
+  --font-sans: "Tajawal", -apple-system, system-ui, sans-serif;
+  --font-heading: "Tajawal", system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   
   /* Radius */
