@@ -128,7 +128,7 @@ export default function Home() {
                   className="text-base text-white/55 mb-2 leading-relaxed"
                   style={{animation:'fadeInUp 0.7s ease 0.2s both'}}
                 >
-                  منصة ارتقِي — المنصة الأكاديمية لطلبة تخصص تكنولوجيا وهندسة المعلومات
+                  المنصة الأكاديمية لطلبة تخصص تكنولوجيا وهندسة المعلومات
                 </p>
                 <p
                   className="text-sm text-white/30 mb-10"
@@ -250,7 +250,7 @@ export default function Home() {
               <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white leading-tight">
                 كل محاضراتك في مكان واحد
               </h1>
-              <p className="text-xs sm:text-sm text-white/60 mb-1">منصة ارتقِي — السنة أولى ماستر</p>
+              <p className="text-xs sm:text-sm text-white/60 mb-1">السنة أولى ماستر</p>
               <p className="text-xs text-white/40 mb-8">تخصص تكنولوجيا وهندسة المعلومات</p>
               <button
                 onClick={() => document.getElementById('modules')?.scrollIntoView({behavior:'smooth'})}
