@@ -38,8 +38,17 @@ export function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             <NavLink to={ROUTE_PATHS.HOME} className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-primary/20 transition-transform duration-300 hover:scale-105 hover:rotate-3">
-                <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-10 h-10 object-contain drop-shadow-sm" loading="lazy" />
+              <div className="flex items-center justify-center w-10 h-10 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-primary/20 transition-transform duration-300 hover:scale-105 hover:rotate-3 shrink-0">
+                <img 
+                  src="/logo.svg" 
+                  alt="ا" 
+                  className="w-8 h-8 object-contain"
+                  loading="eager"
+                  onError={(e) => { 
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-black text-lg">ا</span>';
+                  }}
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-2xl font-extrabold text-primary">منصة ارتقِي</span>
@@ -76,8 +85,17 @@ export function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center gap-3 text-center">
             <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-12 h-12 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-primary/20 transition-all hover:scale-110 hover:-translate-y-1">
-                <img src="/logo.png" alt="شعار جامعة ابن خلدون تيارت" className="w-9 h-9 object-contain" />
+            <div className="flex items-center justify-center w-10 h-10 bg-primary/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-md border border-primary/20 transition-all hover:scale-110 hover:-translate-y-1 shrink-0">
+                <img 
+                  src="/logo.svg" 
+                  alt="ا" 
+                  className="w-8 h-8 object-contain"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement!.innerHTML = '<span class="text-primary font-black text-lg">ا</span>';
+                  }}
+                />
               </div>
               <span className="text-xl font-bold text-primary">منصة ارتقِي</span>
             </div>
