@@ -76,13 +76,13 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-primary/5 to-background">
-      <Card className="w-full max-w-sm shadow-xl border-border/60">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <Card className="w-full max-w-sm shadow-xl border-border">
         <CardHeader className="text-center pb-2 pt-8">
-          <div className="mx-auto mb-4 w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center">
+          <div className="mx-auto mb-4 w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
             <Lock className="w-7 h-7 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-extrabold">لوحة التحكم</CardTitle>
+          <CardTitle className="text-2xl font-bold text-foreground">لوحة التحكم</CardTitle>
           <CardDescription className="text-sm mt-1">أدخل كلمة المرور للمتابعة</CardDescription>
         </CardHeader>
         <CardContent className="pt-4 pb-8">
@@ -407,7 +407,7 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-l from-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground">
               لوحة التحكم
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">إدارة ونشر الدروس للطلاب</p>
