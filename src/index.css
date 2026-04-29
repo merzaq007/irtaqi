@@ -40,9 +40,9 @@
 */
 
 :root {
-  /* Typography - Tajawal خط عربي فخم */
-  --font-sans: "Tajawal", -apple-system, system-ui, sans-serif;
-  --font-heading: "Tajawal", system-ui, sans-serif;
+  /* Typography - Amiri خط عربي كلاسيكي فخم */
+  --font-sans: "Amiri", Georgia, serif;
+  --font-heading: "Amiri", Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   
   /* Radius */
