@@ -25,6 +25,46 @@
 
   <body class="font-cairo bg-slate-50 text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900">
     <div id="root"></div>
+
+    <!-- fallback للمتصفحات الداخلية (WebView) -->
+    <div id="webview-fallback" style="display:none; position:fixed; inset:0; background:#0f172a; z-index:9999; flex-direction:column; align-items:center; justify-content:center; font-family:'Amiri',serif; direction:rtl; padding:24px; text-align:center;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="80" height="80" style="margin-bottom:20px">
+        <circle cx="60" cy="60" r="58" fill="#1e3a8a"/>
+        <path d="M60 22 L72 40 H65 V58 H55 V40 H48 Z" fill="#93c5fd" opacity="0.9"/>
+        <circle cx="60" cy="26" r="4" fill="#fbbf24"/>
+        <text x="60" y="82" font-family="Arial,sans-serif" font-size="18" font-weight="900" fill="white" text-anchor="middle">ارتقِي</text>
+      </svg>
+      <h1 style="color:white; font-size:24px; margin-bottom:8px;">منصة ارتقِي</h1>
+      <p style="color:#93c5fd; font-size:14px; margin-bottom:28px; line-height:1.8;">للحصول على أفضل تجربة<br/>افتح المنصة في متصفحك</p>
+      <a id="open-browser-btn" href="#" style="background:linear-gradient(135deg,#1e40af,#3b82f6); color:white; padding:14px 32px; border-radius:12px; font-size:16px; font-weight:bold; text-decoration:none; display:inline-block; box-shadow:0 4px 20px rgba(59,130,246,0.4);">
+        فتح في المتصفح
+      </a>
+    </div>
+
+    <script>
+      // كشف WebView وإظهار الـ fallback
+      (function() {
+        var ua = navigator.userAgent || '';
+        var isWebView = (
+          /FBAN|FBAV|Instagram|Twitter|Line|WeChat|MicroMessenger/.test(ua) ||
+          (/(iPhone|iPod|iPad)/.test(ua) && !/Safari/.test(ua)) ||
+          (/Android/.test(ua) && /wv/.test(ua))
+        );
+        if (isWebView) {
+          document.getElementById('webview-fallback').style.display = 'flex';
+          document.getElementById('open-browser-btn').href = window.location.href;
+          // على Android يمكن فتح Chrome مباشرة
+          var intentUrl = 'intent://' + window.location.host + window.location.pathname + '#Intent;scheme=https;package=com.android.chrome;end';
+          document.getElementById('open-browser-btn').addEventListener('click', function(e) {
+            if (/Android/.test(ua)) {
+              e.preventDefault();
+              window.location.href = intentUrl;
+              setTimeout(function() { window.open(window.location.href, '_blank'); }, 500);
+            }
+          });
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
